@@ -11,17 +11,22 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.ListenableUndirectedGraph;
 
 public class GraphDisplay extends JFrame {
   
-  private  UndirectedGraph<String, DefaultEdge> graph = new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
+  private  ListenableUndirectedGraph<String, DefaultEdge> graph = new ListenableUndirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+  private JGraphXAdapter<String, DefaultEdge> jgxAdapter;
+  private mxGraphComponent graphComponent;
+  
+  public GraphDisplay(){
+    jgxAdapter = new JGraphXAdapter <String, DefaultEdge>(graph);
+    display();
+  }
   
   public void display(){
-    JGraphXAdapter<String, DefaultEdge> jgxAdapter;
-
-    jgxAdapter = new JGraphXAdapter <String, DefaultEdge>(graph);
     println(graph.toString());
-    mxGraphComponent graphComponent = new mxGraphComponent(jgxAdapter);
+    graphComponent = new mxGraphComponent(jgxAdapter);
     mxGraphModel graphModel = (mxGraphModel)graphComponent.getGraph().getModel(); 
     Collection<Object> cells =  graphModel.getCells().values();
     mxUtils.setCellStyles(graphComponent.getGraph().getModel(), 
@@ -33,8 +38,11 @@ public class GraphDisplay extends JFrame {
     
     setTitle("Network Topology");
     setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-    setVisible(true);    
+    
+     
     pack();
+    setVisible(true);
+    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
   }
   
   public void addVertex(String vertex){

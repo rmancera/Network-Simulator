@@ -29,7 +29,8 @@ public void add_router_button_click(GButton source, GEvent event) { //_CODE_:add
     network.add_router(new_router_name_textfield.getText());
     g.addVertex(new_router_name_textfield.getText());
     g.addEdge(new_router_name_textfield.getText(),adjacent_router_name_textfield.getText());
-    g.display(); g.display(); //stabilize the edit
+    g.display(); 
+    //g.display(); //stabilize the edit
     println("routers in the network: " + network.get_routers_list());
     println("number of routers in the network: " + network.get_routers_count());
   }
