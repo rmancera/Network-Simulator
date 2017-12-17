@@ -109,27 +109,39 @@ public class Router {
   
   //-check costs of each link
   //-recompute distance vectors
-  public void Distance_Vector_update_self(ArrayList<Link> links){
-/*     for(int i=0; i < links.size(); i++){
-       if(links.get(i).router_a_name.equals(router_name) || links.get(i).router_b_name.equals(router_name)){
-         
-          if(links.get(i).router_a_name.equals(router_name)){
-            //compare current cost to link cost
-                //dv_table.get(router_name).put(links.get(i).get_router_b_name(), Integer.toString(links.get(i).get_link_cost()));
-            //load adjacent router row to table
-            dv_table.put(links.get(i).get_router_b_name(),yc_table);
-            println("  Row " + links.get(i).get_router_b_name() + ": " + dv_table.get(links.get(i).get_router_b_name()).toString());
+  public void Distance_Vector_update_self(ArrayList<Router> routers,ArrayList<Link> links){
+     //get current link costs for instant router and map neighbors to costs
+     HashMap<String,Integer> cost_x_v = new HashMap<String,Integer>();//<neighbor, cost>
+     for(int i=0; i < links.size(); i++){
+       if(links.get(i).has_router_name(router_name))
+         cost_x_v.put(links.get(i).get_neighboring_router_name(router_name),new Integer(links.get(i).get_link_cost()));
+     }
+     
+     //iterate through all destination routers "y" where Dx(y) is to be updated
+     for(int j=0; j < routers.size(); j++){
+            
+       int d_x_y_min = 0;
+       boolean d_x_y_min_exists = false;
+       //iterate through 'v's at at y where Dv(y) is found
+       Iterator it = cost_x_v.entrySet().iterator();
+       while (it.hasNext()) {
+          Map.Entry<String,Integer> pair = (Map.Entry)it.next();
+            
+          if(!dv_table.get(pair.getKey()).get(routers.get(j).get_router_name()).equals("INF")){
+             int d_x_y_curr_min = cost_x_v.get(pair.getKey()) + Integer.parseInt(  dv_table.get( pair.getKey() ).get( routers.get(j).get_router_name() )  );
+             if(!d_x_y_min_exists){
+               d_x_y_min = d_x_y_curr_min;
+               d_x_y_min_exists = true;
+             }
+             else if(d_x_y_curr_min < d_x_y_min)
+                 d_x_y_min = d_x_y_curr_min;
+            
+             it.remove(); // avoids a ConcurrentModificationException
           }
-          else if(links.get(i).router_b_name.equals(router_name)){
-            //change instant routers destination costs
-            dv_table.get(router_name).put(links.get(i).get_router_a_name(), Integer.toString(links.get(i).get_link_cost()));
-            //load adjacent router row to table
-            dv_table.put(links.get(i).get_router_a_name(),yc_table);
-            println("  Row " + links.get(i).get_router_a_name() + ": " + dv_table.get(links.get(i).get_router_a_name()).toString());
-          }
-         
        }
-     }*/
+       //load minimum {cost(x,v) + Dv(y)} into the dv_table at the instant routers row and the column belonging to destination y           
+       if(d_x_y_min_exists)
+         dv_table.get(router_name).put(routers.get(j).get_router_name(), Integer.toString(d_x_y_min));
   }
 
 }//end of Router class
