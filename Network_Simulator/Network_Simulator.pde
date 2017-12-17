@@ -26,6 +26,12 @@ public void setup(){
     g.addEdge(network.get_link_routers_names(i)[0],network.get_link_routers_names(i)[1]);
   }
   g.display();
+  
+  
+  //workspace for Distance Vector prototyping
+  for(int i=0; i < network.get_routers_count(); i++){
+    network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
+  }
 }
 
 public void draw(){

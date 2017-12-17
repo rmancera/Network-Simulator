@@ -80,6 +80,12 @@ public class Network{
 
     return routers_list;
   }
+  public final Router get_router(int i){
+    return routers.get(i);
+  }
+  public final ArrayList<Router> get_routers(){
+    return routers;
+  }
   public final String get_router_name(int index){
     return routers.get(index).get_router_name(); 
   }
@@ -92,6 +98,9 @@ public class Network{
     return false;      
   }
 
+  public final ArrayList<Link> get_links(){
+    return links;
+  }
   public final int get_links_count(){//number of routers in the network
     return links.size();
   }
