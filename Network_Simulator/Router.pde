@@ -38,18 +38,6 @@ public class Router {
   
   private HashMap<String,HashMap<String,String>> dv_table;//<neghbors, (destination, cost)>
   
-  public final void update_dv_table(String updating_router_name, HashMap<String,String> yc_row){
-     if(dv_table.containsKey(updating_router_name) && !updating_router_name.equals(router_name)){//check if updating router is neighbor       
-        Iterator it = yc_row.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String,String> pair = (Map.Entry)it.next();
-            dv_table.get(updating_router_name).put(pair.getKey(),new String(pair.getValue()));
-            it.remove(); // avoids a ConcurrentModificationException
-        }
-        println("  [Router][update_dv_table] updated router: " + router_name + "; updated seciont = " + dv_table.get(updating_router_name).toString());
-     }
-  }
-  
   public final void Distance_Vector_initialize(ArrayList<Router> routers, ArrayList<Link> links){
     println("[Router][Distanc_Vector_initialize] initializing to all INFs router: " + router_name);
     dv_table = new HashMap<String,HashMap<String,String>>();
@@ -57,13 +45,15 @@ public class Router {
     //initialize row of instant router
     HashMap<String,String> yc_row_curr = new HashMap<String,String>();//<destination, cost>
     for(int j=0; j < routers.size(); j++){
-      yc_row_curr.put(routers.get(j).get_router_name(),"INF");
+      if(routers.get(j).get_router_name().equals(router_name))
+        yc_row_curr.put(routers.get(j).get_router_name(),Integer.toString(0));
+      else
+        yc_row_curr.put(routers.get(j).get_router_name(),"INF");
     }
     dv_table.put(router_name,yc_row_curr);
     
     //initialize rows of neighbors to INF and change instant routers destination costs
     for(int i=0; i < links.size(); i++){
-      
       //make a row
       if(links.get(i).router_a_name.equals(router_name) || links.get(i).router_b_name.equals(router_name)){
         HashMap<String,String> yc_table = new HashMap<String,String>();//<destination, cost>
@@ -103,6 +93,43 @@ public class Router {
         routers.get(j).update_dv_table(router_name,dv_table.get(router_name));//send to neighbor row of instant router
       }
     }
+  }
+  
+  public final void update_dv_table(String updating_router_name, HashMap<String,String> yc_row){
+     if(dv_table.containsKey(updating_router_name) && !updating_router_name.equals(router_name)){//check if updating router is neighbor       
+        Iterator it = yc_row.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String,String> pair = (Map.Entry)it.next();
+            dv_table.get(updating_router_name).put(pair.getKey(),new String(pair.getValue()));
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+        println("  [Router][update_dv_table] updated router: " + router_name + "; updated seciont = " + dv_table.get(updating_router_name).toString());
+     }
+  }
+  
+  //-check costs of each link
+  //-recompute distance vectors
+  public void Distance_Vector_update_self(ArrayList<Link> links){
+/*     for(int i=0; i < links.size(); i++){
+       if(links.get(i).router_a_name.equals(router_name) || links.get(i).router_b_name.equals(router_name)){
+         
+          if(links.get(i).router_a_name.equals(router_name)){
+            //compare current cost to link cost
+                //dv_table.get(router_name).put(links.get(i).get_router_b_name(), Integer.toString(links.get(i).get_link_cost()));
+            //load adjacent router row to table
+            dv_table.put(links.get(i).get_router_b_name(),yc_table);
+            println("  Row " + links.get(i).get_router_b_name() + ": " + dv_table.get(links.get(i).get_router_b_name()).toString());
+          }
+          else if(links.get(i).router_b_name.equals(router_name)){
+            //change instant routers destination costs
+            dv_table.get(router_name).put(links.get(i).get_router_a_name(), Integer.toString(links.get(i).get_link_cost()));
+            //load adjacent router row to table
+            dv_table.put(links.get(i).get_router_a_name(),yc_table);
+            println("  Row " + links.get(i).get_router_a_name() + ": " + dv_table.get(links.get(i).get_router_a_name()).toString());
+          }
+         
+       }
+     }*/
   }
 
 }//end of Router class

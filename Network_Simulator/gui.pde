@@ -52,15 +52,6 @@ public void remove_link_button_click(GButton source, GEvent event) { //_CODE_:re
   println("remove_link_button - GButton >> GEvent." + event + " @ " + millis());
 } //_CODE_:remove_link_button:685768:
 
-synchronized public void network_topology_window(PApplet appc, GWinData data) { //_CODE_:win2:582684:
-  appc.background(230);
-  
-  if (mousePressed == true) {
-    line(mouseX, mouseY, pmouseX, pmouseY);
-  }
-  
-} //_CODE_:win2:582684:
-
 
 
 // Create all the GUI controls. 
@@ -97,18 +88,6 @@ public void createGUI(){
   adjacent_router_name_textfield = new GTextField(this, 110, 30, 360, 16, G4P.SCROLLBARS_NONE);
   adjacent_router_name_textfield.setPromptText("Enter an existing router name here (routers will be linked).");
   adjacent_router_name_textfield.setOpaque(true);
-  win2 = GWindow.getWindow(this, "Dijkstra Simulation", 0, 0, 600, 600, JAVA2D);
-  win2.noLoop();
-  win2.addDrawHandler(this, "network_topology_window");
-  label1 = new GLabel(win2, 80, 64, 112, 20);
-  label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  label1.setText("Address");
-  label1.setOpaque(false);
-  label2 = new GLabel(win2, 192, 64, 112, 20);
-  label2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  label2.setText("Forwarding Port");
-  label2.setOpaque(false);
-  win2.loop();
 }
 
 // Variable declarations 
@@ -121,6 +100,3 @@ GButton remove_link_button;
 GTextField remove_link_textfield1; 
 GTextField remove_link_textfield2; 
 GTextField adjacent_router_name_textfield; 
-GWindow win2;
-GLabel label1; 
-GLabel label2; 
