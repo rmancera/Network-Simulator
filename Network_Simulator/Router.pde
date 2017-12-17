@@ -32,9 +32,25 @@ public class Router {
     
   }
   
+  /************************************************************************************************
+  *  Distance Vector                                                                              *
+  ************************************************************************************************/
+  
   private HashMap<String,HashMap<String,String>> dv_table;//<neghbors, (destination, cost)>
   
-  public void Distance_Vector_initialize(ArrayList<Router> routers, ArrayList<Link> links){
+  public final void update_dv_table(String updating_router_name, HashMap<String,String> yc_row){
+     if(dv_table.containsKey(routers.get(j).get_router_name()) && !updating_router_name.equals(router_name)){//check if updating router is neighbor       
+        Iterator it = yc_row.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            dv_table.get(updating_router_name).put(pair.getKey(),new String(pair.getValue()));
+            System.out.println(pair.getKey() + " = " + pair.getValue());
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+     }
+  }
+  
+  public final void Distance_Vector_initialize(ArrayList<Router> routers, ArrayList<Link> links){
     println("[Router][Distanc_Vector_initialize] initializing to all INFs router: " + router_name);
     dv_table = new HashMap<String,HashMap<String,String>>();
     
@@ -79,11 +95,11 @@ public class Router {
   }
   
   public void Distance_Vector_update_neighbors(ArrayList<Router> routers, ArrayList<Link> links){
-    for(int i=0; i < links.size(); i++){
-      if(links.get(i).router_a_name.equals(router_name)){
-      }
-      if(links.get(i).router_a_name.equals(router_name)){
-      }
+    //retrieve row of instant router dv_table.get(router_name) 
+    
+    for(int j=0; j < routers.size(); j++){
+      if(dv_table.containsKey(routers.get(j).get_router_name())){//check if iteration router is neighbor
+        routers.get(j).get_dv_table
     }
   }
 
