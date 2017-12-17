@@ -39,14 +39,14 @@ public class Router {
   private HashMap<String,HashMap<String,String>> dv_table;//<neghbors, (destination, cost)>
   
   public final void update_dv_table(String updating_router_name, HashMap<String,String> yc_row){
-     if(dv_table.containsKey(routers.get(j).get_router_name()) && !updating_router_name.equals(router_name)){//check if updating router is neighbor       
+     if(dv_table.containsKey(updating_router_name) && !updating_router_name.equals(router_name)){//check if updating router is neighbor       
         Iterator it = yc_row.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+            Map.Entry<String,String> pair = (Map.Entry)it.next();
             dv_table.get(updating_router_name).put(pair.getKey(),new String(pair.getValue()));
-            System.out.println(pair.getKey() + " = " + pair.getValue());
             it.remove(); // avoids a ConcurrentModificationException
         }
+        println("  [Router][update_dv_table] updated router: " + router_name + "; updated seciont = " + dv_table.get(updating_router_name).toString());
      }
   }
   
@@ -94,12 +94,14 @@ public class Router {
     println("  Row " + router_name + ": " + dv_table.get(router_name).toString());
   }
   
-  public void Distance_Vector_update_neighbors(ArrayList<Router> routers, ArrayList<Link> links){
+  public void Distance_Vector_update_neighbors(ArrayList<Router> routers){
     //retrieve row of instant router dv_table.get(router_name) 
     
     for(int j=0; j < routers.size(); j++){
-      if(dv_table.containsKey(routers.get(j).get_router_name())){//check if iteration router is neighbor
-        routers.get(j).get_dv_table
+      if(dv_table.containsKey(routers.get(j).get_router_name()) && !routers.get(j).get_router_name().equals(router_name)){//check if iteration router is neighbor
+        println("[Router][Distance_Vector_update_neighbors] router: " + router_name + "; sending update to router: " + routers.get(j).get_router_name());
+        routers.get(j).update_dv_table(router_name,dv_table.get(router_name));//send to neighbor row of instant router
+      }
     }
   }
 

@@ -32,6 +32,11 @@ public void setup(){
   for(int i=0; i < network.get_routers_count(); i++){
     network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
   }
+
+  for(int i=0; i < network.get_routers_count(); i++){
+    network.get_router(i). Distance_Vector_update_neighbors(network.get_routers());
+  }
+  
 }
 
 public void draw(){
