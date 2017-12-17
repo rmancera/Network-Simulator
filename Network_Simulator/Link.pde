@@ -35,9 +35,9 @@ public class Link{
   
   public String get_neighboring_router_name(String instant_router_name){
     if(instant_router_name.equals(router_a_name))
-      return router_b_name;
-    else if(instant_router_name.equals(router_a_name))
-      return router_a_name;
+      return new String(router_b_name);
+    else if(instant_router_name.equals(router_b_name))
+      return new String(router_a_name);
     else
       return "ERROR! [Link][get_neighboring_router] " + instant_router_name + " not available in link: " + link_to_string();
   }

@@ -111,6 +111,7 @@ public class Router {
   public void Distance_Vector_update_self(ArrayList<Router> routers,ArrayList<Link> links){
      //get current link costs for instant router and map neighbors to costs
      HashMap<String,Integer> cost_x_v = new HashMap<String,Integer>();//<neighbor, cost>
+     cost_x_v.put(new String(router_name),0); //neighboring with itself is always cost of 0
      for(int i=0; i < links.size(); i++){
        if(links.get(i).has_router_name(router_name))
          cost_x_v.put(links.get(i).get_neighboring_router_name(router_name),new Integer(links.get(i).get_link_cost()));
@@ -125,7 +126,7 @@ public class Router {
        Iterator it = cost_x_v.entrySet().iterator();
        while (it.hasNext()) {
           Map.Entry<String,Integer> pair = (Map.Entry)it.next();
-            
+          println("[Router][Distance_Vector_update_self] current router: " + router_name + " neighbor router: " + pair.getKey());  
           if(!dv_table.get(pair.getKey()).get(routers.get(j).get_router_name()).equals("INF")){
              int d_x_y_curr_min = cost_x_v.get(pair.getKey()) + Integer.parseInt(  dv_table.get( pair.getKey() ).get( routers.get(j).get_router_name() )  );
              if(!d_x_y_min_exists){
