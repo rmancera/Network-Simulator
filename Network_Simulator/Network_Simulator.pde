@@ -32,10 +32,24 @@ public void setup(){
   for(int i=0; i < network.get_routers_count(); i++){
     network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
   }
+  
+  for(int i=0; i < network.get_routers_count(); i++){//after all routers initialized print their dv_tables
+    network.get_router(i). Distance_Vector_print_dv_table();
+  }
+  println("***************************************INITIALIZED**********************************");
+
+  
 
   for(int i=0; i < network.get_routers_count(); i++){
     network.get_router(i). Distance_Vector_update_neighbors(network.get_routers());
   }
+  println("***************************************FIRST UPDATE**********************************");
+  
+  for(int i=0; i < network.get_routers_count(); i++){//after all routers first update print their dv_tables
+    network.get_router(i). Distance_Vector_print_dv_table();
+  }  
+  
+
   
 }
 

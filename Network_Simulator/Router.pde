@@ -86,7 +86,6 @@ public class Router {
   
   public void Distance_Vector_update_neighbors(ArrayList<Router> routers){
     //retrieve row of instant router dv_table.get(router_name) 
-    
     for(int j=0; j < routers.size(); j++){
       if(dv_table.containsKey(routers.get(j).get_router_name()) && !routers.get(j).get_router_name().equals(router_name)){//check if iteration router is neighbor
         println("[Router][Distance_Vector_update_neighbors] router: " + router_name + "; sending update to router: " + routers.get(j).get_router_name());
@@ -95,15 +94,15 @@ public class Router {
     }
   }
   
+  //helper function called by Distance_Vector_update_neighbors(ArrayList<Router> routers)
   public final void update_dv_table(String updating_router_name, HashMap<String,String> yc_row){
      if(dv_table.containsKey(updating_router_name) && !updating_router_name.equals(router_name)){//check if updating router is neighbor       
         Iterator it = yc_row.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<String,String> pair = (Map.Entry)it.next();
-            dv_table.get(updating_router_name).put(pair.getKey(),new String(pair.getValue()));
-            it.remove(); // avoids a ConcurrentModificationException
+            dv_table.get(updating_router_name).put(new String(pair.getKey()),new String(pair.getValue()));
         }
-        println("  [Router][update_dv_table] updated router: " + router_name + "; updated seciont = " + dv_table.get(updating_router_name).toString());
+        println("  [Router][update_dv_table] updated router: " + router_name + "; updated secion = " + dv_table.get(updating_router_name).toString());
      }
   }
   
@@ -135,13 +134,23 @@ public class Router {
              }
              else if(d_x_y_curr_min < d_x_y_min)
                  d_x_y_min = d_x_y_curr_min;
-            
-             it.remove(); // avoids a ConcurrentModificationException
           }
        }
        //load minimum {cost(x,v) + Dv(y)} into the dv_table at the instant routers row and the column belonging to destination y           
        if(d_x_y_min_exists)
          dv_table.get(router_name).put(routers.get(j).get_router_name(), Integer.toString(d_x_y_min));
-  }
+    }
+  }//end of Distance_Vector_update_self(ArrayList<Router> routers,ArrayList<Link> links)
+  
+  public void Distance_Vector_print_dv_table(){
+    println("[Router][Distance_Vector_print_dv_table] printing table of router "  + router_name);
+    
+    Iterator it = dv_table.entrySet().iterator();
+    while (it.hasNext()){
+      Map.Entry<String,HashMap<String,String>> pair = (Map.Entry)it.next();
+      println("  Row: " + pair.getKey() + " = " + dv_table.get(pair.getKey()).toString());
+    }//end of while loop
+    
+  }//end of Distance_Vector_print_dv_table()
 
 }//end of Router class
