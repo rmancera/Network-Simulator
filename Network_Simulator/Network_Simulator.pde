@@ -104,7 +104,9 @@ public void displayGraph()
   }
   
   for(int i=0; i < network.get_links_count(); i++){
-    g.addEdge(network.get_link_routers_names(i)[0],network.get_link_routers_names(i)[1]);
+    DefaultWeightedEdge e = g.addEdge(network.get_link_routers_names(i)[0],network.get_link_routers_names(i)[1]);
+    g.setEdgeWeights(e,network.get_links().get(i).get_link_cost());
+    
   }
   g.display(); 
 }

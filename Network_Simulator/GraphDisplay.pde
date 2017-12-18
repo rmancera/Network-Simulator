@@ -48,15 +48,18 @@ public class GraphDisplay extends JFrame {
   
   public void addVertex(String vertex){
     graph.addVertex(vertex);
-    println("[Graph][addVertex] adding vertex: " + vertex);
+    //println("[Graph][addVertex] adding vertex: " + vertex);
   }
-  public void addEdge(String vertex1, String vertex2){
-    graph.addEdge(vertex1,vertex2);
-    println("[Graph][addEdge] adding edge: " + vertex1 + ", " + vertex2);
+  public DefaultWeightedEdge addEdge(String vertex1, String vertex2){
+    return graph.addEdge(vertex1,vertex2);
+    //println("[Graph][addEdge] adding edge: " + vertex1 + ", " + vertex2);
   }
   public void removeVertex(String vertex){
     graph.removeVertex(vertex);
-    println("[Graph][removeVertex] removing: " + vertex);
-    println(graph.toString());
+    //println("[Graph][removeVertex] removing: " + vertex);
+    //println(graph.toString());
+  }
+  public void setEdgeWeights(DefaultWeightedEdge e, int weight){
+    graph.setEdgeWeight(e, weight);
   }
 }
