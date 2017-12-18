@@ -111,24 +111,40 @@ synchronized public void win_draw_dijkstra(PApplet appc, GWinData data) { //_COD
 } //_CODE_:window_dijkstra:895846:
 
 public void button_click_dijkstra_sim(GButton source, GEvent event) { //_CODE_:button_dijkstra_simulation:508840:
-  HashMap<String,String> fwd_tbl = network.get_router(0).get_dijkstra_forwarding_table();
-  
-  //address_dijkstra_fwd_tbl.setText();
-  String addresses = new String();
-  String forward_ports = new String();
-  
-  Iterator it = fwd_tbl.entrySet().iterator();
-  while (it.hasNext()){
 
-    Map.Entry<String,String> pair = (Map.Entry)it.next();
-    addresses += pair.getKey() + "\r\n";
-    forward_ports += pair.getValue() + "\r\n";
-    println("getKey : " + pair.getKey() + "getValue: " + pair.getValue());
+  if (dij_choosen_router_textfield.getText().length()==0){
+    println("ERROR: User failed to provide enough inputs");
   }
-  
-  fwd_link_dij_label.setText(forward_ports);
-  address_dijkstra_fwd_tbl.setText(addresses);
-  println(addresses);
+  else if (!network.router_exists(dij_choosen_router_textfield.getText())){
+    println("ERROR: User provided router names do not exist");
+  }
+  else {// removes router
+      label_dij_router_shown.setText(dij_choosen_router_textfield.getText());
+      int router_index = network.get_router_index(dij_choosen_router_textfield.getText());
+      network.get_router(router_index).Dijkstra_compute(network.get_routers(), network.get_links());
+      network.get_router(router_index).dijkstra_compute_forwarding_table();
+      
+      HashMap<String,String> fwd_tbl = network.get_router(network.get_router_index(dij_choosen_router_textfield.getText())).get_dijkstra_forwarding_table();
+      
+      //address_dijkstra_fwd_tbl.setText();
+      String addresses = new String();
+      String forward_ports = new String();
+      
+      Iterator it = fwd_tbl.entrySet().iterator();
+      while (it.hasNext()){
+    
+        Map.Entry<String,String> pair = (Map.Entry)it.next();
+        addresses += pair.getKey() + "\r\n";
+        forward_ports += pair.getValue() + "\r\n";
+        println("getKey : " + pair.getKey() + "getValue: " + pair.getValue());
+      }
+      
+      fwd_link_dij_label.setText(forward_ports);
+      address_dijkstra_fwd_tbl.setText(addresses);
+      
+      displayGraph();
+  }
+
 
   
 } //_CODE_:button_dijkstra_simulation:508840:
@@ -136,6 +152,22 @@ public void button_click_dijkstra_sim(GButton source, GEvent event) { //_CODE_:b
 public void textfield1_change1(GTextField source, GEvent event) { //_CODE_:textfield1:660066:
   println("textfield1 - GTextField >> GEvent." + event + " @ " + millis());
 } //_CODE_:textfield1:660066:
+
+public void button_click_cost_dij(GButton source, GEvent event) { //_CODE_:button_change_cost_dij:453746:
+  println("button_change_cost_dij - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:button_change_cost_dij:453746:
+
+public void textfield2_change1(GTextField source, GEvent event) { //_CODE_:textfield2:546056:
+  println("textfield2 - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:textfield2:546056:
+
+public void textfield3_change1(GTextField source, GEvent event) { //_CODE_:textfield3:536020:
+  println("textfield3 - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:textfield3:536020:
+
+public void textfield4_change1(GTextField source, GEvent event) { //_CODE_:dij_choosen_router_textfield:434707:
+  println("textfield4 - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:dij_choosen_router_textfield:434707:
 
 
 
@@ -192,16 +224,16 @@ public void createGUI(){
   simulation_dropList = new GDropList(this, 10, 240, 160, 60, 2);
   simulation_dropList.setItems(loadStrings("list_340319"), 0);
   simulation_dropList.addEventHandler(this, "simulation_dropList_click");
-  window_distance_vector = GWindow.getWindow(this, "Distance Vector Simulation", 0, 0, 800, 600, JAVA2D);
+  window_distance_vector = GWindow.getWindow(this, "Distance Vector Simulation", 0, 0, 680, 600, JAVA2D);
   window_distance_vector.noLoop();
   window_distance_vector.addDrawHandler(this, "window_distance_vector_draw");
-  dv_sim_textarea = new GTextArea(window_distance_vector, 20, 70, 440, 280, G4P.SCROLLBARS_NONE);
+  dv_sim_textarea = new GTextArea(window_distance_vector, 200, 280, 440, 280, G4P.SCROLLBARS_NONE);
   dv_sim_textarea.setOpaque(true);
-  dv_sim_button = new GButton(window_distance_vector, 10, 10, 80, 50);
+  dv_sim_button = new GButton(window_distance_vector, 10, 10, 120, 50);
   dv_sim_button.setText("Step Through Simulation");
-  dv_sim_button.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  dv_sim_button.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   dv_sim_button.addEventHandler(this, "dv_sim_button_click");
-  window_dijkstra = GWindow.getWindow(this, "Dijkstra Simulation", 0, 0, 800, 600, JAVA2D);
+  window_dijkstra = GWindow.getWindow(this, "Dijkstra Simulation", 0, 0, 680, 600, JAVA2D);
   window_dijkstra.noLoop();
   window_dijkstra.addDrawHandler(this, "win_draw_dijkstra");
   label1 = new GLabel(window_dijkstra, 20, 90, 80, 20);
@@ -236,9 +268,38 @@ public void createGUI(){
   button_dijkstra_simulation.setTextBold();
   button_dijkstra_simulation.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   button_dijkstra_simulation.addEventHandler(this, "button_click_dijkstra_sim");
-  textfield1 = new GTextField(window_dijkstra, 630, 10, 160, 80, G4P.SCROLLBARS_NONE);
+  textfield1 = new GTextField(window_dijkstra, 330, 110, 210, 20, G4P.SCROLLBARS_NONE);
+  textfield1.setPromptText("Enter a router on the link.");
   textfield1.setOpaque(true);
   textfield1.addEventHandler(this, "textfield1_change1");
+  button_change_cost_dij = new GButton(window_dijkstra, 210, 90, 110, 20);
+  button_change_cost_dij.setText("Change Link Costs");
+  button_change_cost_dij.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+  button_change_cost_dij.addEventHandler(this, "button_click_cost_dij");
+  textfield2 = new GTextField(window_dijkstra, 330, 130, 210, 20, G4P.SCROLLBARS_NONE);
+  textfield2.setPromptText("Enter the other router on the link.");
+  textfield2.setOpaque(true);
+  textfield2.addEventHandler(this, "textfield2_change1");
+  textfield3 = new GTextField(window_dijkstra, 330, 90, 210, 20, G4P.SCROLLBARS_NONE);
+  textfield3.setPromptText("Enter the new cost.");
+  textfield3.setOpaque(true);
+  textfield3.addEventHandler(this, "textfield3_change1");
+  dij_choosen_router_textfield = new GTextField(window_dijkstra, 200, 10, 210, 30, G4P.SCROLLBARS_NONE);
+  dij_choosen_router_textfield.setPromptText("Enter a different router to view.");
+  dij_choosen_router_textfield.setOpaque(true);
+  dij_choosen_router_textfield.addEventHandler(this, "textfield4_change1");
+  label5 = new GLabel(window_dijkstra, 440, 10, 110, 50);
+  label5.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label5.setText("Currently Showing Stats For Router");
+  label5.setTextBold();
+  label5.setLocalColorScheme(GCScheme.RED_SCHEME);
+  label5.setOpaque(true);
+  label_dij_router_shown = new GLabel(window_dijkstra, 550, 10, 110, 50);
+  label_dij_router_shown.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label_dij_router_shown.setText("Blank");
+  label_dij_router_shown.setTextBold();
+  label_dij_router_shown.setLocalColorScheme(GCScheme.RED_SCHEME);
+  label_dij_router_shown.setOpaque(true);
   window_distance_vector.loop();
   window_dijkstra.loop();
 }
@@ -272,3 +333,9 @@ GLabel label4;
 GLabel label6; 
 GButton button_dijkstra_simulation; 
 GTextField textfield1; 
+GButton button_change_cost_dij; 
+GTextField textfield2; 
+GTextField textfield3; 
+GTextField dij_choosen_router_textfield; 
+GLabel label5; 
+GLabel label_dij_router_shown; 

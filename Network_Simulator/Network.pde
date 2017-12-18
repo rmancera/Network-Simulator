@@ -92,6 +92,16 @@ public class Network{
     return false;
   }
   
+  public int get_router_index(String router_name){
+    int index = 0;
+    for (int i = 0; i < routers.size(); i++){
+      if (router_name.equals(routers.get(i).get_router_name()))
+        index = i;
+    }
+    
+    return index;      
+  }
+  
   public final void add_link(Link new_link){
     links.add(new_link);
   }

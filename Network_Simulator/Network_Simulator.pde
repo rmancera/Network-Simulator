@@ -27,8 +27,8 @@ public void setup(){
   //***********************************************
   //workspace for Dijkstra prototyping*************
   //***********************************************
-  network.get_router(0).Dijkstra_compute(network.get_routers(), network.get_links());
-  network.get_router(0).dijkstra_compute_forwarding_table();
+  //network.get_router(0).Dijkstra_compute(network.get_routers(), network.get_links());
+  //network.get_router(0).dijkstra_compute_forwarding_table();
 
 
   
