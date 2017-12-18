@@ -2,7 +2,7 @@
 import g4p_controls.*;
 
 //creates and initializes default network (includes routers and links)
-Network network = new Network(2);
+Network network = new Network(1);
 //creates new jframe for a visible graph window
 GraphDisplay g = new GraphDisplay();
 
@@ -30,13 +30,14 @@ public void setup(){
   //***********************************************
   //workspace for Distance Vector prototyping******
   //***********************************************
-  /*
+  
   for(int i=0; i < network.get_routers_count(); i++){
     network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
   }
   println("***************************************INITIALIZED**********************************");  
   for(int i=0; i < network.get_routers_count(); i++){//after all routers initialized print their dv_tables
-    network.get_router(i). Distance_Vector_print_dv_table();
+    network.get_router(i).Distance_Vector_print_dv_table();
+    network.get_router(i).Distance_Vector_print_forwarding_table(network.links);
   }
 
 
@@ -51,6 +52,7 @@ public void setup(){
   println("***************************************FIRST UPDATE**********************************");
   for(int i=0; i < network.get_routers_count(); i++){//after all routers first update print their dv_tables
     network.get_router(i). Distance_Vector_print_dv_table();
+    network.get_router(i).Distance_Vector_print_forwarding_table(network.links);
   }  
   
   
@@ -64,14 +66,15 @@ public void setup(){
   println("***************************************SECOND UPDATE**********************************");
   for(int i=0; i < network.get_routers_count(); i++){//after all routers first update print their dv_tables
     network.get_router(i). Distance_Vector_print_dv_table();
+    network.get_router(i).Distance_Vector_print_forwarding_table(network.links);
   }    
-  */
+  
   
   
   //***********************************************
   //workspace for Dijkstra prototyping*************
   //***********************************************
-  network.get_router(0).Dijkstra_compute(network.get_routers(), network.get_links());
+  //network.get_router(0).Dijkstra_compute(network.get_routers(), network.get_links());
   
 }
 

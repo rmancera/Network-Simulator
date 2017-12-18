@@ -170,8 +170,60 @@ public class Router {
     
   }//end of Distance_Vector_print_dv_table()
   
-  
-  
+  private HashMap<String,String> forwarding_table; //<destination,next hop>
+  public void Distance_Vector_print_forwarding_table(ArrayList<Link> links){
+    HashMap<String,Integer> neighbors = new HashMap<String,Integer>();//<neighbor name, direct cost to neighbor>
+    forwarding_table = new HashMap<String,String>();//<destinationY, next hop>
+    
+    //initialize forwarding table and neghbor cost map
+    for(int i = 0; i < links.size(); i++){
+      if(links.get(i).has_router_name(router_name)){
+        forwarding_table.put(links.get(i).get_neighboring_router_name(router_name),links.get(i).get_neighboring_router_name(router_name));
+        neighbors.put(links.get(i).get_neighboring_router_name(router_name), links.get(i).get_link_cost());  
+      }
+    }
+    
+    
+    
+    println("[Router][Distance_Vector_print_dv_table] printing table of router "  + router_name);
+    Iterator it_col = dv_table.get(router_name).entrySet().iterator();
+    while(it_col.hasNext()){
+      Map.Entry<String,String> pair_col = (Map.Entry)it_col.next();
+      Iterator it_row = dv_table.entrySet().iterator();
+      String min_neighbor = null;
+      String min_cost_dvY = "INF"; //min{c(x,v) + Dv(y)
+      while (it_row.hasNext()){
+        Map.Entry<String,HashMap<String,String>> pair_row = (Map.Entry)it_row.next();
+        
+        if(!pair_row.getKey().equals(router_name)){
+          if(!dv_table.get(pair_row.getKey()).get(pair_col.getKey()).equals("INF")){
+            if(!min_cost_dvY.equals("INF")){
+              if(Integer.parseInt(dv_table.get(pair_row.getKey()).get(pair_col.getKey())) + neighbors.get(pair_row.getKey())  < Integer.parseInt(min_cost_dvY)){
+                min_neighbor = new String(pair_row.getKey());
+                min_cost_dvY = Integer.toString(Integer.parseInt(dv_table.get(pair_row.getKey()).get(pair_col.getKey())) + neighbors.get(pair_row.getKey()));                
+              }
+            }
+            else{
+                min_neighbor = new String(pair_row.getKey());
+                println("[Router][Distance_Vector_print_forwarding_table] min_neighbor: " + min_neighbor);
+                println("[Router][Distance_Vector_print_forwarding_table] pair_row.getKey(): " + pair_row.getKey());
+                println("[Router][Distance_Vector_print_forwarding_table] pair_col.getKey(): " + pair_col.getKey());
+                println("[Router][Distance_Vector_print_forwarding_table] neighbors.get(pair_col.getKey()): " + neighbors.get(pair_col.getKey()));
+                min_cost_dvY = Integer.toString(Integer.parseInt(dv_table.get(pair_row.getKey()).get(pair_col.getKey())) + neighbors.get(pair_row.getKey()));  
+            }
+          }
+        }
+        
+        
+      }//end of while loop
+      
+      if(min_neighbor != null){
+          forwarding_table.put(pair_col.getKey(),min_neighbor);
+          println("[Router][Distance_Vector_print_forwarding_table] forwarding_table: " + forwarding_table.toString());
+      }
+  }
+      println("[Router][Distance_Vector_print_forwarding_table] forwarding_table: " + forwarding_table.toString());
+  }
   
   
   
@@ -180,9 +232,11 @@ public class Router {
   *                                     Dijstra's Algorithm                                       *
   *************************************************************************************************
   ************************************************************************************************/
+  private HashMap<String,String> previous_router_table;
+  private HashMap<String,String> distance_table;
   public void Dijkstra_compute(ArrayList<Router> routers, ArrayList<Link> links){
-    HashMap<String,String> distance_table = new HashMap<String,String>();//<router name, cost>
-    HashMap<String,String> previous_router_table = new HashMap<String,String>();//<router name, previous router>
+    distance_table = new HashMap<String,String>();//<router name, cost>
+    previous_router_table = new HashMap<String,String>();//<router name, previous router>
     
     //initialize priority queue
     class weighted_router{String weighted_router_name; String weight;}
