@@ -170,8 +170,12 @@ public class Router {
     
   }//end of Distance_Vector_print_dv_table()
   
+  
+  
+  
+  
   private HashMap<String,String> forwarding_table; //<destination,next hop>
-  public void Distance_Vector_print_forwarding_table(ArrayList<Link> links){
+  public String Distance_Vector_get_forwarding_table(ArrayList<Link> links){
     HashMap<String,Integer> neighbors = new HashMap<String,Integer>();//<neighbor name, direct cost to neighbor>
     forwarding_table = new HashMap<String,String>();//<destinationY, next hop>
     
@@ -182,10 +186,7 @@ public class Router {
         neighbors.put(links.get(i).get_neighboring_router_name(router_name), links.get(i).get_link_cost());  
       }
     }
-    
-    
-    
-    println("[Router][Distance_Vector_print_dv_table] printing table of router "  + router_name);
+       
     Iterator it_col = dv_table.get(router_name).entrySet().iterator();
     while(it_col.hasNext()){
       Map.Entry<String,String> pair_col = (Map.Entry)it_col.next();
@@ -223,6 +224,8 @@ public class Router {
       }
   }
       println("[Router][Distance_Vector_print_forwarding_table] forwarding_table: " + forwarding_table.toString());
+      
+      return forwarding_table.toString();
   }
   
   

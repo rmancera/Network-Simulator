@@ -75,9 +75,28 @@ public void add_link_button_click(GButton source, GEvent event) { //_CODE_:add_l
 
 } //_CODE_:add_link_button:596038:
 
-synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:window1:583608:
+synchronized public void window_distance_vector_draw(PApplet appc, GWinData data) { //_CODE_:window_distance_vector:583608:
   appc.background(230);
-} //_CODE_:window1:583608:
+  //textSize(32);
+  //for(int i=0; i < network.get_routers_count(); i++){
+    //network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
+  //}
+  //println("***************************************INITIALIZED**********************************");  
+  //for(int i=0; i < network.get_routers_count(); i++){//after all routers initialized print their dv_tables
+    //network.get_router(i).Distance_Vector_print_dv_table();
+    //String fwtbl = new String();
+    //fwtbl = network.get_router(0).Distance_Vector_get_forwarding_table(network.links);
+
+  //}
+  
+} //_CODE_:window_distance_vector:583608:
+
+public void dv_sim_button_click(GButton source, GEvent event) { //_CODE_:dv_sim_button:778539:
+  for(int i=0; i < network.get_routers_count(); i++){
+    network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
+  }
+  dv_sim_textarea.setText(network.get_router(0).Distance_Vector_get_forwarding_table(network.links));
+} //_CODE_:dv_sim_button:778539:
 
 
 
@@ -131,10 +150,16 @@ public void createGUI(){
   add_link_cost_textfield = new GTextField(this, 110, 120, 360, 16, G4P.SCROLLBARS_NONE);
   add_link_cost_textfield.setPromptText("Enter the cost of the new link here.");
   add_link_cost_textfield.setOpaque(true);
-  window1 = GWindow.getWindow(this, "Window title", 0, 0, 480, 320, JAVA2D);
-  window1.noLoop();
-  window1.addDrawHandler(this, "win_draw1");
-  window1.loop();
+  window_distance_vector = GWindow.getWindow(this, "Distance Vector Simulation", 0, 0, 800, 600, JAVA2D);
+  window_distance_vector.noLoop();
+  window_distance_vector.addDrawHandler(this, "window_distance_vector_draw");
+  dv_sim_textarea = new GTextArea(window_distance_vector, 10, 70, 650, 280, G4P.SCROLLBARS_NONE);
+  dv_sim_textarea.setOpaque(true);
+  dv_sim_button = new GButton(window_distance_vector, 10, 10, 80, 50);
+  dv_sim_button.setText("Step Through Simulation");
+  dv_sim_button.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  dv_sim_button.addEventHandler(this, "dv_sim_button_click");
+  window_distance_vector.loop();
 }
 
 // Variable declarations 
@@ -152,4 +177,6 @@ GButton add_link_button;
 GTextField add_link_textfield1; 
 GTextField add_link_textfield2; 
 GTextField add_link_cost_textfield; 
-GWindow window1;
+GWindow window_distance_vector;
+GTextArea dv_sim_textarea; 
+GButton dv_sim_button; 

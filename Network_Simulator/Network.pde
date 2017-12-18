@@ -72,6 +72,7 @@ public class Network{
     routers.get(routers.size()-1).set_router_name(new_router_name);
     add_link(new_router_name, linked_router_name,cost);//link between both routers added to network
   }
+  
   public final boolean remove_router(String router_name){//true success; false failure
     if(router_links_count(router_name) > 1) return false;
     
@@ -94,9 +95,19 @@ public class Network{
   public final void add_link(Link new_link){
     links.add(new_link);
   }
-  public final void add_link(String router1_name, String router2_name, int cost){
-    links.add(new Link(router1_name,router2_name,cost));
+  
+  public final boolean add_link(String router1_name, String router2_name, int cost){
+ 
+    if(router1_name.equals(router2_name)) return false;
+    for(int i = 0; i < links.size(); i++){
+      if(links.get(i).has_router_name(router1_name) && links.get(i).has_router_name(router2_name))
+        return false;
+    }
+    
+    links.add(new Link(router1_name,router2_name,cost)); 
+    return true;
   }
+  
   public final boolean remove_link(String router1_name, String router2_name){//true success; false failure
   
     if((router_links_count(router1_name) <= 1) || (router_links_count(router2_name) <= 1)) return false;
