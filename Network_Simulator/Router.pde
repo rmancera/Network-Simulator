@@ -188,10 +188,13 @@ public class Router {
     class weighted_router{String weighted_router_name; String weight;}
     Comparator<weighted_router> comparator = new Comparator<weighted_router>() {
       @Override
-      public int compare(weighted_router left, weighted_router right) {        
-          if((Integer.parseInt(left.weight) < Integer.parseInt(right.weight)) || right.weight.equals("INF"))
+      public int compare(weighted_router left, weighted_router right) {
+          if(!left.weight.equals("INF") && right.weight.equals("INF")) return -1;
+          if(left.weight.equals("INF") && !right.weight.equals("INF")) return 1;
+          else if (left.weight.equals("INF") && right.weight.equals("INF")) return 0;
+          else if((Integer.parseInt(left.weight) < Integer.parseInt(right.weight)))
             return -1;
-          else if(left.weight.equals("INF") || (Integer.parseInt(left.weight) > Integer.parseInt(right.weight)))
+          else if((Integer.parseInt(left.weight) > Integer.parseInt(right.weight)))
             return 1;
           else 
             return 0;
@@ -220,33 +223,44 @@ public class Router {
       
       for(int i = 0; i <links.size(); i++){
         if(links.get(i).has_router_name(min_router.weighted_router_name)){//found a link corresponding to min_router 
-            Iterator it = queue.iterator();
+            ArrayList<weighted_router> min_router_neighbors_removed = new ArrayList<weighted_router>();
+            Iterator<weighted_router> it = queue.iterator();
             while (it.hasNext()){
-              weighted_router min_router_neighbor = (weighted_router)it.next();
+              weighted_router min_router_neighbor = it.next();
               if(links.get(i).get_neighboring_router_name(min_router.weighted_router_name).equals(min_router_neighbor.weighted_router_name)){//found a neighbor of min_router
-                queue.remove(min_router_neighbor);
+                min_router_neighbors_removed.add(min_router_neighbor);
                 if(!distance_table.get(min_router.weighted_router_name).equals("INF")){
                   int alternative_distance = Integer.parseInt(distance_table.get(min_router.weighted_router_name)) + links.get(i).get_link_cost();
+                  println("[Router][Dijkstra_compute] distance_table.get(min_router_neighbor.weighted_router_name): " + distance_table.get(min_router_neighbor.weighted_router_name));
+                  println("[Router][Dijkstra_compute] distance_table.get(min_router_neighbor.weight): " + distance_table.get(min_router_neighbor.weighted_router_name));
                   if(distance_table.get(min_router_neighbor.weighted_router_name).equals("INF")){
                     distance_table.put(min_router_neighbor.weighted_router_name, Integer.toString(alternative_distance));
                     previous_router_table.put(min_router_neighbor.weighted_router_name,min_router.weighted_router_name);
+                    min_router_neighbor.weight = Integer.toString(alternative_distance);
                   } 
-                  else if(alternative_distance < Integer.parseInt(distance_table.get(min_router_neighbor.weight))){
+                  else if(alternative_distance < Integer.parseInt(distance_table.get(min_router_neighbor.weighted_router_name))){
                     distance_table.put(min_router_neighbor.weighted_router_name, Integer.toString(alternative_distance));
-                    previous_router_table.put(min_router_neighbor.weighted_router_name,min_router.weighted_router_name);                    
+                    previous_router_table.put(min_router_neighbor.weighted_router_name,min_router.weighted_router_name);
+                    min_router_neighbor.weight = Integer.toString(alternative_distance);
                   }
                 }
-                queue.add(min_router_neighbor);
               }
             }//end of while(...)
+             //for(int k = 0; k < min_router_neighbors_removed.size();k++)//place removed and edited neighbots back in queue 
+               //queue.add(min_router_neighbors_removed.get(k));
         }
         
       }//end of for(...)
       
     }//end of while(...)
     
+  println("[Router][Dijkstra_compute] for router: " + router_name);
+  println("    Distance table: " + distance_table.toString());
+  println("    Previous router table: " + previous_router_table.toString());
+    
   }//end of Dijkstra_compute(ArrayList<Router> routers, ArrayList<Link> links)
-  //println(distance_table.toString() + previous_router_table.toString
+  
+
 
   
 

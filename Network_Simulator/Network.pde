@@ -4,7 +4,7 @@ public class Network{
   private String mode;//"Dijkstra" or "Distance Vector"
   
   public Network(int option){//generates a default network (int option = 1 --> see Optional Project spec figure)
-    if (option == 1){   
+    if (option == 0){   
       routers = new ArrayList<Router>();   
       for(int i = 116; i <= 122; i++){//"ascii 't'-->116 through 'z'-->122
         Router curr_router = new Router("Dijkstra");
@@ -20,7 +20,7 @@ public class Network{
       links.add(new Link("x","y",10));links.add(new Link("x","z",10));
       links.add(new Link("y","z",10));
     }
-    else{
+    else if (option == 1){
       routers = new ArrayList<Router>();
       routers.add((new Router("Dijkstra"))); routers.get(0).set_router_name("x");
       routers.add((new Router("Dijkstra"))); routers.get(1).set_router_name("y");
@@ -30,7 +30,22 @@ public class Network{
       links.add(new Link("x","y",2));
       links.add(new Link("x","z",7));
       links.add(new Link("y","z",1));
-    }      
+    }
+    else if (option == 2){
+      routers = new ArrayList<Router>();   
+      for(int i = 117; i <= 122; i++){//"ascii 'u'-->117 through 'z'-->122
+        Router curr_router = new Router("Dijkstra");
+        routers.add(curr_router);
+        routers.get(routers.size()-1).set_router_name(Character.toString ((char) i));
+      }
+      
+      links = new ArrayList<Link>();
+      links.add(new Link("u","v",2));links.add(new Link("u","w",5));links.add(new Link("u","x",1));
+      links.add(new Link("v","w",3));links.add(new Link("v","x",2));
+      links.add(new Link("w","x",3));links.add(new Link("w","y",1));links.add(new Link("w","z",5));
+      links.add(new Link("x","y",1));
+      links.add(new Link("y","z",2));      
+    }
   }
   
   public Network(String first_router_name, String second_router_name, String user_input_mode, int first_link_cost){    

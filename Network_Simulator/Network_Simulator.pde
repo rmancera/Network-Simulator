@@ -2,7 +2,7 @@
 import g4p_controls.*;
 
 //creates and initializes default network (includes routers and links)
-Network network = new Network(1);
+Network network = new Network(2);
 //creates new jframe for a visible graph window
 GraphDisplay g = new GraphDisplay();
 
@@ -71,7 +71,7 @@ public void setup(){
   //***********************************************
   //workspace for Dijkstra prototyping*************
   //***********************************************
-  
+  network.get_router(0).Dijkstra_compute(network.get_routers(), network.get_links());
   
 }
 
