@@ -22,7 +22,7 @@ public class GraphDisplay extends JFrame {
   
   public GraphDisplay(){
     jgxAdapter = new JGraphXAdapter <String,DefaultWeightedEdge>(graph);
-    display();
+    //display();
   }
   
   public void display(){
@@ -43,7 +43,7 @@ public class GraphDisplay extends JFrame {
      
     pack();
     setVisible(true);
-    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+    this.setExtendedState(this.getExtendedState()); //also works with this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
   }
   
   public void addVertex(String vertex){

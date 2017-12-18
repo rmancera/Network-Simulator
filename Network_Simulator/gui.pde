@@ -15,7 +15,7 @@
  */
 
 public void add_router_button_click(GButton source, GEvent event) { //_CODE_:add_router_button:497740:
-  if ((new_router_name_textfield.getText().length()==0) ||  (adjacent_router_name_textfield.getText().length()==0)){
+  if ((new_router_name_textfield.getText().length()==0) ||  (adjacent_router_name_textfield.getText().length()==0 || add_router_cost_textfield.getText().length() == 0)){
     println("ERROR: User failed to provide new router name or an existing router to link to the new router");
   }
   else if (network.router_exists(new_router_name_textfield.getText())){
@@ -26,10 +26,11 @@ public void add_router_button_click(GButton source, GEvent event) { //_CODE_:add
   }
   else{
     println("adding the following router to the network: " + new_router_name_textfield.getText());
-    network.add_router(new_router_name_textfield.getText());
-    g.addVertex(new_router_name_textfield.getText());
-    g.addEdge(new_router_name_textfield.getText(),adjacent_router_name_textfield.getText());
-    g.display(); 
+    network.add_router(new_router_name_textfield.getText(),adjacent_router_name_textfield.getText(),Integer.parseInt(add_router_cost_textfield.getText()));
+    //g.addVertex(new_router_name_textfield.getText());
+    //g.addEdge(new_router_name_textfield.getText(),adjacent_router_name_textfield.getText());
+    //g.display();
+    displayGraph();
     println("routers in the network: " + network.get_routers_list());
     println("number of routers in the network: " + network.get_routers_count());
   }
@@ -40,8 +41,7 @@ public void remove_router_button_click(GButton source, GEvent event) { //_CODE_:
   if(network.remove_router(remove_router_textfield.getText()) == false)
     println("ALERT! Failed to remove: " + remove_router_textfield.getText());
   else {
-    g.removeVertex(remove_router_textfield.getText());
-    g.display(); //stabilize the edit
+    displayGraph();
     println("routers in the network: " + network.get_routers_list());
     println("number of routers in the network: " + network.get_routers_count());
   }
@@ -50,19 +50,34 @@ public void remove_router_button_click(GButton source, GEvent event) { //_CODE_:
 public void remove_link_button_click(GButton source, GEvent event) { //_CODE_:remove_link_button:685768:
 
   if ((remove_link_textfield1.getText().length()==0) ||  (remove_link_textfield2.getText().length()==0)){
-    println("ERROR: User failed to provide new router name or an existing router to link to the new router");
+    println("ERROR: User failed to provide enough inputs");
   }
-  else if (network.router_exists(remove_link_textfield1.getText()) && network.router_exists(remove_link_textfield2.getText())){
-    println("ERROR: User provided new router name already exists");
+  else if (!network.router_exists(remove_link_textfield1.getText()) || !network.router_exists(remove_link_textfield2.getText())){
+    println("ERROR: User provided router names do not exist");
   }
-  else{  
-    //if(network.remove_link(remove_link_textfield1.getText(),remove_link_textfield2.getText())){
-      //g.removeEdge(remove_link_textfield1.getText(),remove_link_textfield2.getText());
-    //}
+  else if(network.remove_link(remove_link_textfield1.getText(), remove_link_textfield2.getText())){// removes router
+      displayGraph();
   }
-  
   
 } //_CODE_:remove_link_button:685768:
+
+public void add_link_button_click(GButton source, GEvent event) { //_CODE_:add_link_button:596038:
+
+  if ((add_link_textfield1.getText().length()==0) ||  (add_link_textfield2.getText().length()==0 || add_link_cost_textfield.getText().length() == 0)){
+    println("ERROR: User failed to provide enough inputs");
+  }
+  else if (!network.router_exists(add_link_textfield1.getText()) || !network.router_exists(add_link_textfield2.getText())){
+    println("ERROR: User provided router names do not exist");
+  }
+  else if(network.add_link(add_link_textfield1.getText(), add_link_textfield2.getText(),Integer.parseInt(add_link_cost_textfield.getText()))){// adds a link
+      displayGraph();
+  }
+
+} //_CODE_:add_link_button:596038:
+
+synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:window1:583608:
+  appc.background(230);
+} //_CODE_:window1:583608:
 
 
 
@@ -80,26 +95,46 @@ public void createGUI(){
   new_router_name_textfield = new GTextField(this, 110, 10, 360, 16, G4P.SCROLLBARS_NONE);
   new_router_name_textfield.setPromptText("Enter a unique router name here (new router).");
   new_router_name_textfield.setOpaque(true);
-  remove_router_button = new GButton(this, 10, 110, 96, 16);
+  remove_router_button = new GButton(this, 10, 200, 96, 16);
   remove_router_button.setText("Remove Router");
   remove_router_button.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   remove_router_button.addEventHandler(this, "remove_router_button_click");
-  remove_router_textfield = new GTextField(this, 110, 110, 360, 30, G4P.SCROLLBARS_NONE);
-  remove_router_textfield.setPromptText("Enter name of router to remove here (router should have a single link).");
+  remove_router_textfield = new GTextField(this, 110, 200, 360, 30, G4P.SCROLLBARS_NONE);
+  remove_router_textfield.setPromptText("Enter name of router (with only 1 link) to remove here.");
   remove_router_textfield.setOpaque(true);
-  remove_link_button = new GButton(this, 10, 60, 96, 16);
+  remove_link_button = new GButton(this, 10, 150, 96, 16);
   remove_link_button.setText("Remove Link");
   remove_link_button.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   remove_link_button.addEventHandler(this, "remove_link_button_click");
-  remove_link_textfield1 = new GTextField(this, 110, 60, 360, 16, G4P.SCROLLBARS_NONE);
+  remove_link_textfield1 = new GTextField(this, 110, 150, 360, 16, G4P.SCROLLBARS_NONE);
   remove_link_textfield1.setPromptText("Enter name of one of the routers on the link here.");
   remove_link_textfield1.setOpaque(true);
-  remove_link_textfield2 = new GTextField(this, 110, 80, 360, 16, G4P.SCROLLBARS_NONE);
+  remove_link_textfield2 = new GTextField(this, 110, 170, 360, 16, G4P.SCROLLBARS_NONE);
   remove_link_textfield2.setPromptText("Enter name of the other router on the link here.");
   remove_link_textfield2.setOpaque(true);
   adjacent_router_name_textfield = new GTextField(this, 110, 30, 360, 16, G4P.SCROLLBARS_NONE);
   adjacent_router_name_textfield.setPromptText("Enter an existing router name here (routers will be linked).");
   adjacent_router_name_textfield.setOpaque(true);
+  add_router_cost_textfield = new GTextField(this, 110, 50, 360, 16, G4P.SCROLLBARS_NONE);
+  add_router_cost_textfield.setPromptText("Enter initial link cost between routers here.");
+  add_router_cost_textfield.setOpaque(true);
+  add_link_button = new GButton(this, 10, 80, 96, 16);
+  add_link_button.setText("Add Link");
+  add_link_button.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+  add_link_button.addEventHandler(this, "add_link_button_click");
+  add_link_textfield1 = new GTextField(this, 110, 80, 360, 16, G4P.SCROLLBARS_NONE);
+  add_link_textfield1.setPromptText("Enter a first existing router to be linked here.");
+  add_link_textfield1.setOpaque(true);
+  add_link_textfield2 = new GTextField(this, 110, 100, 360, 16, G4P.SCROLLBARS_NONE);
+  add_link_textfield2.setPromptText("Enter a second existing router to be linked here.");
+  add_link_textfield2.setOpaque(true);
+  add_link_cost_textfield = new GTextField(this, 110, 120, 360, 16, G4P.SCROLLBARS_NONE);
+  add_link_cost_textfield.setPromptText("Enter the cost of the new link here.");
+  add_link_cost_textfield.setOpaque(true);
+  window1 = GWindow.getWindow(this, "Window title", 0, 0, 480, 320, JAVA2D);
+  window1.noLoop();
+  window1.addDrawHandler(this, "win_draw1");
+  window1.loop();
 }
 
 // Variable declarations 
@@ -112,3 +147,9 @@ GButton remove_link_button;
 GTextField remove_link_textfield1; 
 GTextField remove_link_textfield2; 
 GTextField adjacent_router_name_textfield; 
+GTextField add_router_cost_textfield; 
+GButton add_link_button; 
+GTextField add_link_textfield1; 
+GTextField add_link_textfield2; 
+GTextField add_link_cost_textfield; 
+GWindow window1;

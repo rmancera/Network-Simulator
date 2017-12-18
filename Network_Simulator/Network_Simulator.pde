@@ -2,9 +2,9 @@
 import g4p_controls.*;
 
 //creates and initializes default network (includes routers and links)
-Network network = new Network(1);
+Network network = new Network(0);
 //creates new jframe for a visible graph window
-GraphDisplay g = new GraphDisplay();
+GraphDisplay g = null;
 
 public void setup(){
   size(480, 320, JAVA2D);
@@ -17,17 +17,7 @@ public void setup(){
   println("links in the network: " + network.get_links_list());
   println("number of links in the network: " + network.get_links_count());
   
-  //place network into visual graph window
-  g.removeAllEdges();
-  
-  for(int i=0; i < network.get_routers_count(); i++){
-    g.addVertex(network.get_router_name(i));
-  }
-  
-  for(int i=0; i < network.get_links_count(); i++){
-    g.addEdge(network.get_link_routers_names(i)[0],network.get_link_routers_names(i)[1]);
-  }
-  g.display();
+  displayGraph();
   
   //***********************************************
   //workspace for Distance Vector prototyping******
@@ -89,4 +79,21 @@ public void draw(){
 // to customise the GUI controls
 public void customGUI(){
 
+}
+
+public void displayGraph()
+{
+  if(g != null)
+    g.dispose();
+  
+   //place network into visual graph window
+  g = new GraphDisplay();
+  for(int i=0; i < network.get_routers_count(); i++){
+    g.addVertex(network.get_router_name(i));
+  }
+  
+  for(int i=0; i < network.get_links_count(); i++){
+    g.addEdge(network.get_link_routers_names(i)[0],network.get_link_routers_names(i)[1]);
+  }
+  g.display(); 
 }

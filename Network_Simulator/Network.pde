@@ -65,21 +65,24 @@ public class Network{
     links.add(first_link);
   }
   
-  public final void add_router(String new_router_name){
+  public final void add_router(String new_router_name, String linked_router_name, int cost){
+    if(!router_exists(linked_router_name)) return;
+    if(router_exists(new_router_name)) return;
     routers.add(new Router(mode));
     routers.get(routers.size()-1).set_router_name(new_router_name);
+    add_link(new_router_name, linked_router_name,cost);//link between both routers added to network
   }
   public final boolean remove_router(String router_name){//true success; false failure
-  
+    if(router_links_count(router_name) > 1) return false;
+    
     for (int i = 0; i < routers.size(); i++){
        if(routers.get(i).get_router_name().equals(router_name) == true){
          for(int j= 0; j < links.size(); j++){
-           if(links.get(j).get_router_a_name().equals(router_name) || links.get(j).get_router_b_name().equals(router_name)){
+           if(links.get(j).has_router_name(router_name)){
              println("[Network][remove_router] deleting link:" + links.get(j).link_to_string());
              links.remove(j);
            }
          }
-         
          routers.remove(i);
          return true;
        }
@@ -91,14 +94,22 @@ public class Network{
   public final void add_link(Link new_link){
     links.add(new_link);
   }
-  public final void remove_link(String router1_name, String router2_name){//true success; false failure
-    if((router_links_count(router1_name) > 1) && (router_links_count(router2_name) > 1)){
-      for(int i = 0; i < links.size(); i++){
-        links.remove(i);
-      }
-    }
+  public final void add_link(String router1_name, String router2_name, int cost){
+    links.add(new Link(router1_name,router2_name,cost));
   }
-  public final int router_links_count(String router_name){
+  public final boolean remove_link(String router1_name, String router2_name){//true success; false failure
+  
+    if((router_links_count(router1_name) <= 1) || (router_links_count(router2_name) <= 1)) return false;
+    if(router1_name.equals(router2_name)) return false;
+    
+    for(int i = 0; i < links.size(); i++){
+      if(links.get(i).has_router_name(router1_name) && links.get(i).has_router_name(router2_name))
+        links.remove(i);
+    }
+    
+    return true;
+  }
+  public final int router_links_count(String router_name){//# of links corresponding to router specified
     int count = 0;
     for(int i = 0; i < links.size(); i++){
       if(links.get(i).has_router_name(router_name))
