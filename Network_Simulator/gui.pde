@@ -30,7 +30,6 @@ public void add_router_button_click(GButton source, GEvent event) { //_CODE_:add
     g.addVertex(new_router_name_textfield.getText());
     g.addEdge(new_router_name_textfield.getText(),adjacent_router_name_textfield.getText());
     g.display(); 
-    //g.display(); //stabilize the edit
     println("routers in the network: " + network.get_routers_list());
     println("number of routers in the network: " + network.get_routers_count());
   }
@@ -42,14 +41,27 @@ public void remove_router_button_click(GButton source, GEvent event) { //_CODE_:
     println("ALERT! Failed to remove: " + remove_router_textfield.getText());
   else {
     g.removeVertex(remove_router_textfield.getText());
-    g.display(); g.display(); //stabilize the edit
+    g.display(); //stabilize the edit
     println("routers in the network: " + network.get_routers_list());
     println("number of routers in the network: " + network.get_routers_count());
   }
 } //_CODE_:remove_router_button:449664:
 
 public void remove_link_button_click(GButton source, GEvent event) { //_CODE_:remove_link_button:685768:
-  println("remove_link_button - GButton >> GEvent." + event + " @ " + millis());
+
+  if ((remove_link_textfield1.getText().length()==0) ||  (remove_link_textfield2.getText().length()==0)){
+    println("ERROR: User failed to provide new router name or an existing router to link to the new router");
+  }
+  else if (network.router_exists(remove_link_textfield1.getText()) && network.router_exists(remove_link_textfield2.getText())){
+    println("ERROR: User provided new router name already exists");
+  }
+  else{  
+    //if(network.remove_link(remove_link_textfield1.getText(),remove_link_textfield2.getText())){
+      //g.removeEdge(remove_link_textfield1.getText(),remove_link_textfield2.getText());
+    //}
+  }
+  
+  
 } //_CODE_:remove_link_button:685768:
 
 

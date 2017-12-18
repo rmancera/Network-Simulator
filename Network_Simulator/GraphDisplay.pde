@@ -7,20 +7,21 @@ import java.util.Collection;
 import javax.swing.JFrame;
 
 import org.jgrapht.UndirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.AbstractGraph.*;
 import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.ext.JGraphXAdapter;
-import org.jgrapht.graph.ListenableUndirectedGraph;
+import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 
 public class GraphDisplay extends JFrame {
   
-  private  ListenableUndirectedGraph<String, DefaultEdge> graph = new ListenableUndirectedGraph<String, DefaultEdge>(DefaultEdge.class);
-  private JGraphXAdapter<String, DefaultEdge> jgxAdapter;
+  private  ListenableUndirectedWeightedGraph<String, DefaultWeightedEdge> graph = new ListenableUndirectedWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+  private JGraphXAdapter<String, DefaultWeightedEdge> jgxAdapter;
   private mxGraphComponent graphComponent;
   
   public GraphDisplay(){
-    jgxAdapter = new JGraphXAdapter <String, DefaultEdge>(graph);
+    jgxAdapter = new JGraphXAdapter <String,DefaultWeightedEdge>(graph);
     display();
   }
   

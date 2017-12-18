@@ -18,6 +18,8 @@ public void setup(){
   println("number of links in the network: " + network.get_links_count());
   
   //place network into visual graph window
+  g.removeAllEdges();
+  
   for(int i=0; i < network.get_routers_count(); i++){
     g.addVertex(network.get_router_name(i));
   }

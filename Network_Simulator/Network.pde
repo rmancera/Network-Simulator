@@ -91,8 +91,21 @@ public class Network{
   public final void add_link(Link new_link){
     links.add(new_link);
   }
-  public final boolean remove_link(){//true success; false failure
-    return false;
+  public final void remove_link(String router1_name, String router2_name){//true success; false failure
+    if((router_links_count(router1_name) > 1) && (router_links_count(router2_name) > 1)){
+      for(int i = 0; i < links.size(); i++){
+        links.remove(i);
+      }
+    }
+  }
+  public final int router_links_count(String router_name){
+    int count = 0;
+    for(int i = 0; i < links.size(); i++){
+      if(links.get(i).has_router_name(router_name))
+        count++;
+    }
+    
+    return count;
   }
   
   
