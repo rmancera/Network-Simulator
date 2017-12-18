@@ -46,11 +46,11 @@ public class Router {
   
   
   
-  /************************************************************************************************
-  *************************************************************************************************
-  *                                     Distance Vector                                           *
-  *************************************************************************************************
-  ************************************************************************************************/
+  /***************************************************************************************************************
+  ****************************************************************************************************************
+  *                                     Distance Vector                                                          *
+  ****************************************************************************************************************
+  ****************************************************************************************************************/
   
   private HashMap<String,HashMap<String,String>> dv_table;//<neghbors, (destination, cost)>
   
@@ -175,6 +175,7 @@ public class Router {
   
   
   private HashMap<String,String> forwarding_table; //<destination,next hop>
+ 
   public String Distance_Vector_get_forwarding_table(ArrayList<Link> links){
     HashMap<String,Integer> neighbors = new HashMap<String,Integer>();//<neighbor name, direct cost to neighbor>
     forwarding_table = new HashMap<String,String>();//<destinationY, next hop>
@@ -230,13 +231,17 @@ public class Router {
   
   
   
-  /************************************************************************************************
-  *************************************************************************************************
-  *                                     Dijstra's Algorithm                                       *
-  *************************************************************************************************
-  ************************************************************************************************/
+  /*****************************************************************************************************************
+  ******************************************************************************************************************
+  *                                     Dijstra's Algorithm                                                        *
+  ******************************************************************************************************************
+  ******************************************************************************************************************/
+  
+  
   private HashMap<String,String> previous_router_table;
   private HashMap<String,String> distance_table;
+  
+  
   public void Dijkstra_compute(ArrayList<Router> routers, ArrayList<Link> links){
     distance_table = new HashMap<String,String>();//<router name, cost>
     previous_router_table = new HashMap<String,String>();//<router name, previous router>
@@ -323,6 +328,49 @@ public class Router {
   println("    Previous router table: " + previous_router_table.toString());
     
   }//end of Dijkstra_compute(ArrayList<Router> routers, ArrayList<Link> links)
+  
+  public HashMap<String,String> get_previous_router_table(){return previous_router_table;}
+  public HashMap<String,String> get_distance_table(){return distance_table;}
+  
+  HashMap<String,String> forwarding_table_dij;
+  
+  public HashMap<String,String> get_dijkstra_forwarding_table(){
+      dijkstra_compute_forwarding_table();
+      return forwarding_table_dij;
+  }
+  
+  public void dijkstra_compute_forwarding_table(){
+    forwarding_table_dij = new HashMap<String,String>();
+    ArrayList<String> port_routers = new ArrayList<String>();
+    
+    //collect neighbors of this router
+    Iterator it = previous_router_table.entrySet().iterator();
+    while (it.hasNext()){
+      Map.Entry<String,String> pair = (Map.Entry)it.next();
+      
+      if(pair.getValue().equals(router_name))
+        port_routers.add(pair.getKey());
+    }
+    
+    while(forwarding_table_dij.size() < previous_router_table.size())
+    {
+        
+        println("[Router][dijkstra_compute_forwarding_table()] forwarding table: " + forwarding_table_dij.toString());
+        Iterator it2 = previous_router_table.entrySet().iterator();
+        while (it2.hasNext()){
+          Map.Entry<String,String> pair2 = (Map.Entry)it2.next();
+          println("[Router][dijkstra_compute_forwarding_table()] key, value: " + pair2.getKey() + ", " + pair2.getValue());
+
+          if(port_routers.contains(pair2.getKey()))
+              forwarding_table_dij.put(pair2.getKey(), pair2.getKey());
+          else if(forwarding_table_dij.containsKey(pair2.getValue()))
+              forwarding_table_dij.put(pair2.getKey(),forwarding_table_dij.get(pair2.getValue()));          
+        }
+    }
+    
+    println("[Router][dijkstra_compute_forwarding_table()] forwarding table: " + forwarding_table_dij.toString());
+  }
+  
   
   
   

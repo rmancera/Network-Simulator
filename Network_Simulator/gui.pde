@@ -75,6 +75,11 @@ public void add_link_button_click(GButton source, GEvent event) { //_CODE_:add_l
 
 } //_CODE_:add_link_button:596038:
 
+public void simulation_dropList_click(GDropList source, GEvent event) { //_CODE_:simulation_dropList:340319:
+  if(source.getSelectedIndex() == 0) {window_distance_vector.setVisible(false);window_dijkstra.setVisible(true);}
+  else if(source.getSelectedIndex()==1){window_distance_vector.setVisible(true);window_dijkstra.setVisible(false);}
+} //_CODE_:simulation_dropList:340319:
+
 synchronized public void window_distance_vector_draw(PApplet appc, GWinData data) { //_CODE_:window_distance_vector:583608:
   appc.background(230);
   //textSize(32);
@@ -98,6 +103,17 @@ public void dv_sim_button_click(GButton source, GEvent event) { //_CODE_:dv_sim_
   dv_sim_textarea.setText(network.get_router(0).Distance_Vector_get_forwarding_table(network.links));
 } //_CODE_:dv_sim_button:778539:
 
+synchronized public void win_draw_dijkstra(PApplet appc, GWinData data) { //_CODE_:window_dijkstra:895846:
+  appc.background(230);
+  
+  
+  
+} //_CODE_:window_dijkstra:895846:
+
+public void button_click_dijkstra_sim(GButton source, GEvent event) { //_CODE_:button_dijkstra_simulation:508840:
+  println("button_dijkstra_simulation - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:button_dijkstra_simulation:508840:
+
 
 
 // Create all the GUI controls. 
@@ -118,7 +134,7 @@ public void createGUI(){
   remove_router_button.setText("Remove Router");
   remove_router_button.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   remove_router_button.addEventHandler(this, "remove_router_button_click");
-  remove_router_textfield = new GTextField(this, 110, 200, 360, 30, G4P.SCROLLBARS_NONE);
+  remove_router_textfield = new GTextField(this, 110, 200, 360, 16, G4P.SCROLLBARS_NONE);
   remove_router_textfield.setPromptText("Enter name of router (with only 1 link) to remove here.");
   remove_router_textfield.setOpaque(true);
   remove_link_button = new GButton(this, 10, 150, 96, 16);
@@ -150,16 +166,55 @@ public void createGUI(){
   add_link_cost_textfield = new GTextField(this, 110, 120, 360, 16, G4P.SCROLLBARS_NONE);
   add_link_cost_textfield.setPromptText("Enter the cost of the new link here.");
   add_link_cost_textfield.setOpaque(true);
+  simulation_dropList = new GDropList(this, 10, 240, 160, 60, 2);
+  simulation_dropList.setItems(loadStrings("list_340319"), 0);
+  simulation_dropList.addEventHandler(this, "simulation_dropList_click");
   window_distance_vector = GWindow.getWindow(this, "Distance Vector Simulation", 0, 0, 800, 600, JAVA2D);
   window_distance_vector.noLoop();
   window_distance_vector.addDrawHandler(this, "window_distance_vector_draw");
-  dv_sim_textarea = new GTextArea(window_distance_vector, 10, 70, 650, 280, G4P.SCROLLBARS_NONE);
+  dv_sim_textarea = new GTextArea(window_distance_vector, 20, 70, 440, 280, G4P.SCROLLBARS_NONE);
   dv_sim_textarea.setOpaque(true);
   dv_sim_button = new GButton(window_distance_vector, 10, 10, 80, 50);
   dv_sim_button.setText("Step Through Simulation");
   dv_sim_button.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   dv_sim_button.addEventHandler(this, "dv_sim_button_click");
+  window_dijkstra = GWindow.getWindow(this, "Dijkstra Simulation", 0, 0, 800, 600, JAVA2D);
+  window_dijkstra.noLoop();
+  window_dijkstra.addDrawHandler(this, "win_draw_dijkstra");
+  label1 = new GLabel(window_dijkstra, 20, 90, 80, 20);
+  label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label1.setText("Address");
+  label1.setOpaque(false);
+  label2 = new GLabel(window_dijkstra, 110, 90, 80, 20);
+  label2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label2.setText("Link");
+  label2.setOpaque(false);
+  label3 = new GLabel(window_dijkstra, 20, 50, 170, 40);
+  label3.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label3.setText("Forwarding Table");
+  label3.setTextBold();
+  label3.setOpaque(false);
+  address_dijkstra_fwd_tbl = new GLabel(window_dijkstra, 20, 110, 80, 460);
+  address_dijkstra_fwd_tbl.setTextAlign(GAlign.LEFT, GAlign.TOP);
+  address_dijkstra_fwd_tbl.setOpaque(true);
+  label5 = new GLabel(window_dijkstra, 110, 110, 80, 460);
+  label5.setTextAlign(GAlign.LEFT, GAlign.TOP);
+  label5.setOpaque(true);
+  label4 = new GLabel(window_dijkstra, 220, 220, 430, 350);
+  label4.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label4.setOpaque(true);
+  label6 = new GLabel(window_dijkstra, 220, 180, 430, 40);
+  label6.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label6.setText("Least Cost Path");
+  label6.setTextBold();
+  label6.setOpaque(false);
+  button_dijkstra_simulation = new GButton(window_dijkstra, 20, 10, 170, 30);
+  button_dijkstra_simulation.setText("Run Dijkstra Simulation");
+  button_dijkstra_simulation.setTextBold();
+  button_dijkstra_simulation.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+  button_dijkstra_simulation.addEventHandler(this, "button_click_dijkstra_sim");
   window_distance_vector.loop();
+  window_dijkstra.loop();
 }
 
 // Variable declarations 
@@ -177,6 +232,16 @@ GButton add_link_button;
 GTextField add_link_textfield1; 
 GTextField add_link_textfield2; 
 GTextField add_link_cost_textfield; 
+GDropList simulation_dropList; 
 GWindow window_distance_vector;
 GTextArea dv_sim_textarea; 
 GButton dv_sim_button; 
+GWindow window_dijkstra;
+GLabel label1; 
+GLabel label2; 
+GLabel label3; 
+GLabel address_dijkstra_fwd_tbl; 
+GLabel label5; 
+GLabel label4; 
+GLabel label6; 
+GButton button_dijkstra_simulation; 

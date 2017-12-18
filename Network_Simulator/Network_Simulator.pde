@@ -5,12 +5,16 @@ import g4p_controls.*;
 Network network = new Network(0);
 //creates new jframe for a visible graph window
 GraphDisplay g = null;
+GraphDisplay dg = null;
 
 public void setup(){
   size(480, 320, JAVA2D);
   createGUI();
   customGUI();
   // Place your setup code here
+  window_distance_vector.setVisible(false);
+  window_dijkstra.setVisible(false);
+  
   
   println("routers in the network: " + network.get_routers_list());
   println("number of routers in the network: " + network.get_routers_count());
@@ -19,16 +23,25 @@ public void setup(){
   
   displayGraph();
   
+    
+  //***********************************************
+  //workspace for Dijkstra prototyping*************
+  //***********************************************
+  network.get_router(0).Dijkstra_compute(network.get_routers(), network.get_links());
+  network.get_router(0).dijkstra_compute_forwarding_table();
+
+
+  
   //***********************************************
   //workspace for Distance Vector prototyping******
   //***********************************************
   
-  
+  /*
   for(int i=0; i < network.get_routers_count(); i++){
     network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
   }
   println("***************************************INITIALIZED**********************************");  
-  /*for(int i=0; i < network.get_routers_count(); i++){//after all routers initialized print their dv_tables
+  for(int i=0; i < network.get_routers_count(); i++){//after all routers initialized print their dv_tables
     network.get_router(i).Distance_Vector_print_dv_table();
     network.get_router(i).Distance_Vector_print_forwarding_table(network.links);
   }
@@ -64,11 +77,7 @@ public void setup(){
   
   */
   
-  
-  //***********************************************
-  //workspace for Dijkstra prototyping*************
-  //***********************************************
-  //network.get_router(0).Dijkstra_compute(network.get_routers(), network.get_links());
+
   
 }
 
