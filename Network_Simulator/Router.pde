@@ -1,7 +1,17 @@
+/*
+** To Do:
+** [] remove mode variable from class and constructor (it was not necessary in the final impementation)
+** [] if time allows clean up Distance_Vector_initialize(ArrayList<Router> routers, ArrayList<Link> links)
+** --see  Distance_Vector_update_self(...) which uses new methods in Link class that should clean up the code 
+*/
+
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.PriorityQueue;
+import java.util.Comparator;
 
 public class Router {
   private String router_name;
@@ -32,8 +42,14 @@ public class Router {
     
   }
   
+  
+  
+  
+  
   /************************************************************************************************
-  *  Distance Vector                                                                              *
+  *************************************************************************************************
+  *                                     Distance Vector                                           *
+  *************************************************************************************************
   ************************************************************************************************/
   
   private HashMap<String,HashMap<String,String>> dv_table;//<neghbors, (destination, cost)>
@@ -153,5 +169,85 @@ public class Router {
     }//end of while loop
     
   }//end of Distance_Vector_print_dv_table()
+  
+  
+  
+  
+  
+  
+  /************************************************************************************************
+  *************************************************************************************************
+  *                                     Dijstra's Algorithm                                       *
+  *************************************************************************************************
+  ************************************************************************************************/
+  public void Dijkstra_compute(ArrayList<Router> routers, ArrayList<Link> links){
+    HashMap<String,String> distance_table = new HashMap<String,String>();//<router name, cost>
+    HashMap<String,String> previous_router_table = new HashMap<String,String>();//<router name, previous router>
+    
+    //initialize priority queue
+    class weighted_router{String weighted_router_name; String weight;}
+    Comparator<weighted_router> comparator = new Comparator<weighted_router>() {
+      @Override
+      public int compare(weighted_router left, weighted_router right) {        
+          if((Integer.parseInt(left.weight) < Integer.parseInt(right.weight)) || right.weight.equals("INF"))
+            return -1;
+          else if(left.weight.equals("INF") || (Integer.parseInt(left.weight) > Integer.parseInt(right.weight)))
+            return 1;
+          else 
+            return 0;
+      } 
+    };
+    PriorityQueue<weighted_router> queue = new PriorityQueue<weighted_router>(routers.size(), comparator);
+    
+     
+    //initialization
+    distance_table.put(router_name, Integer.toString(0));
+    
+    for (int i = 0; i < routers.size(); i++){
+      if(!routers.get(i).get_router_name().equals(router_name)){
+        distance_table.put(routers.get(i).get_router_name(), "INF");
+        previous_router_table.put(routers.get(i).get_router_name(),null);
+      }
+      weighted_router wr = new weighted_router();
+      wr.weighted_router_name = routers.get(i).get_router_name();
+      wr.weight = distance_table.get(wr.weighted_router_name);
+      queue.add(wr);
+    }
+    
+    //main loop
+    while(!queue.isEmpty()){
+      weighted_router min_router = queue.poll();
+      
+      for(int i = 0; i <links.size(); i++){
+        if(links.get(i).has_router_name(min_router.weighted_router_name)){//found a link corresponding to min_router 
+            Iterator it = queue.iterator();
+            while (it.hasNext()){
+              weighted_router min_router_neighbor = (weighted_router)it.next();
+              if(links.get(i).get_neighboring_router_name(min_router.weighted_router_name).equals(min_router_neighbor.weighted_router_name)){//found a neighbor of min_router
+                queue.remove(min_router_neighbor);
+                if(!distance_table.get(min_router.weighted_router_name).equals("INF")){
+                  int alternative_distance = Integer.parseInt(distance_table.get(min_router.weighted_router_name)) + links.get(i).get_link_cost();
+                  if(distance_table.get(min_router_neighbor.weighted_router_name).equals("INF")){
+                    distance_table.put(min_router_neighbor.weighted_router_name, Integer.toString(alternative_distance));
+                    previous_router_table.put(min_router_neighbor.weighted_router_name,min_router.weighted_router_name);
+                  } 
+                  else if(alternative_distance < Integer.parseInt(distance_table.get(min_router_neighbor.weight))){
+                    distance_table.put(min_router_neighbor.weighted_router_name, Integer.toString(alternative_distance));
+                    previous_router_table.put(min_router_neighbor.weighted_router_name,min_router.weighted_router_name);                    
+                  }
+                }
+                queue.add(min_router_neighbor);
+              }
+            }//end of while(...)
+        }
+        
+      }//end of for(...)
+      
+    }//end of while(...)
+    
+  }//end of Dijkstra_compute(ArrayList<Router> routers, ArrayList<Link> links)
+  //println(distance_table.toString() + previous_router_table.toString
+
+  
 
 }//end of Router class

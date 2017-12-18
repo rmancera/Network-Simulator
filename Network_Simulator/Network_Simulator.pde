@@ -2,7 +2,7 @@
 import g4p_controls.*;
 
 //creates and initializes default network (includes routers and links)
-Network network = new Network(0);
+Network network = new Network(1);
 //creates new jframe for a visible graph window
 GraphDisplay g = new GraphDisplay();
 
@@ -30,6 +30,7 @@ public void setup(){
   //***********************************************
   //workspace for Distance Vector prototyping******
   //***********************************************
+  /*
   for(int i=0; i < network.get_routers_count(); i++){
     network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
   }
@@ -64,7 +65,13 @@ public void setup(){
   for(int i=0; i < network.get_routers_count(); i++){//after all routers first update print their dv_tables
     network.get_router(i). Distance_Vector_print_dv_table();
   }    
-
+  */
+  
+  
+  //***********************************************
+  //workspace for Dijkstra prototyping*************
+  //***********************************************
+  
   
 }
 
