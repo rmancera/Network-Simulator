@@ -111,8 +111,31 @@ synchronized public void win_draw_dijkstra(PApplet appc, GWinData data) { //_COD
 } //_CODE_:window_dijkstra:895846:
 
 public void button_click_dijkstra_sim(GButton source, GEvent event) { //_CODE_:button_dijkstra_simulation:508840:
-  println("button_dijkstra_simulation - GButton >> GEvent." + event + " @ " + millis());
+  HashMap<String,String> fwd_tbl = network.get_router(0).get_dijkstra_forwarding_table();
+  
+  //address_dijkstra_fwd_tbl.setText();
+  String addresses = new String();
+  String forward_ports = new String();
+  
+  Iterator it = fwd_tbl.entrySet().iterator();
+  while (it.hasNext()){
+
+    Map.Entry<String,String> pair = (Map.Entry)it.next();
+    addresses += pair.getKey() + "\r\n";
+    forward_ports += pair.getValue() + "\r\n";
+    println("getKey : " + pair.getKey() + "getValue: " + pair.getValue());
+  }
+  
+  fwd_link_dij_label.setText(forward_ports);
+  address_dijkstra_fwd_tbl.setText(addresses);
+  println(addresses);
+
+  
 } //_CODE_:button_dijkstra_simulation:508840:
+
+public void textfield1_change1(GTextField source, GEvent event) { //_CODE_:textfield1:660066:
+  println("textfield1 - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:textfield1:660066:
 
 
 
@@ -197,9 +220,9 @@ public void createGUI(){
   address_dijkstra_fwd_tbl = new GLabel(window_dijkstra, 20, 110, 80, 460);
   address_dijkstra_fwd_tbl.setTextAlign(GAlign.LEFT, GAlign.TOP);
   address_dijkstra_fwd_tbl.setOpaque(true);
-  label5 = new GLabel(window_dijkstra, 110, 110, 80, 460);
-  label5.setTextAlign(GAlign.LEFT, GAlign.TOP);
-  label5.setOpaque(true);
+  fwd_link_dij_label = new GLabel(window_dijkstra, 110, 110, 80, 460);
+  fwd_link_dij_label.setTextAlign(GAlign.LEFT, GAlign.TOP);
+  fwd_link_dij_label.setOpaque(true);
   label4 = new GLabel(window_dijkstra, 220, 220, 430, 350);
   label4.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label4.setOpaque(true);
@@ -213,6 +236,9 @@ public void createGUI(){
   button_dijkstra_simulation.setTextBold();
   button_dijkstra_simulation.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   button_dijkstra_simulation.addEventHandler(this, "button_click_dijkstra_sim");
+  textfield1 = new GTextField(window_dijkstra, 630, 10, 160, 80, G4P.SCROLLBARS_NONE);
+  textfield1.setOpaque(true);
+  textfield1.addEventHandler(this, "textfield1_change1");
   window_distance_vector.loop();
   window_dijkstra.loop();
 }
@@ -241,7 +267,8 @@ GLabel label1;
 GLabel label2; 
 GLabel label3; 
 GLabel address_dijkstra_fwd_tbl; 
-GLabel label5; 
+GLabel fwd_link_dij_label; 
 GLabel label4; 
 GLabel label6; 
 GButton button_dijkstra_simulation; 
+GTextField textfield1; 
