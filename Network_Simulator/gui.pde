@@ -27,9 +27,6 @@ public void add_router_button_click(GButton source, GEvent event) { //_CODE_:add
   else{
     println("adding the following router to the network: " + new_router_name_textfield.getText());
     network.add_router(new_router_name_textfield.getText(),adjacent_router_name_textfield.getText(),Integer.parseInt(add_router_cost_textfield.getText()));
-    //g.addVertex(new_router_name_textfield.getText());
-    //g.addEdge(new_router_name_textfield.getText(),adjacent_router_name_textfield.getText());
-    //g.display();
     displayGraph();
     println("routers in the network: " + network.get_routers_list());
     println("number of routers in the network: " + network.get_routers_count());
@@ -82,22 +79,15 @@ public void simulation_dropList_click(GDropList source, GEvent event) { //_CODE_
 
 synchronized public void window_distance_vector_draw(PApplet appc, GWinData data) { //_CODE_:window_distance_vector:583608:
   appc.background(230);
-  //textSize(32);
-  //for(int i=0; i < network.get_routers_count(); i++){
-    //network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
-  //}
-  //println("***************************************INITIALIZED**********************************");  
-  //for(int i=0; i < network.get_routers_count(); i++){//after all routers initialized print their dv_tables
-    //network.get_router(i).Distance_Vector_print_dv_table();
-    //String fwtbl = new String();
-    //fwtbl = network.get_router(0).Distance_Vector_get_forwarding_table(network.links);
-
-  //}
-  
 } //_CODE_:window_distance_vector:583608:
 
 public void dv_sim_button_click(GButton source, GEvent event) { //_CODE_:dv_sim_button:778539:
-
+/****************************************************************************************************************/
+/******************************DISTANCE VECTOR SIMULATION BUTTON*************************************************/
+/****************************************************************************************************************/
+/****************************************************************************************************************/
+/****************************************************************************************************************/
+  
 
     
     if(textfield_dv_router_choosen.getText().length() == 0 && (choosen_dv_router == null)){ 
@@ -177,6 +167,10 @@ public void button_click_change_router_dv(GButton source, GEvent event) { //_COD
     
 } //_CODE_:button_change_router_dv:819476:
 
+public void button1_click1(GButton source, GEvent event) { //_CODE_:button1:258793:
+  println("button1 - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:button1:258793:
+
 synchronized public void win_draw_dijkstra(PApplet appc, GWinData data) { //_CODE_:window_dijkstra:895846:
   appc.background(230);
   
@@ -239,21 +233,29 @@ public void button_click_dijkstra_sim(GButton source, GEvent event) { //_CODE_:b
   
 } //_CODE_:button_dijkstra_simulation:508840:
 
-public void textfield1_change1(GTextField source, GEvent event) { //_CODE_:textfield1:660066:
-  println("textfield1 - GTextField >> GEvent." + event + " @ " + millis());
-} //_CODE_:textfield1:660066:
-
 public void button_click_cost_dij(GButton source, GEvent event) { //_CODE_:button_change_cost_dij:453746:
   println("button_change_cost_dij - GButton >> GEvent." + event + " @ " + millis());
+  /*****************************************************************************************/
+  /*******************CHANGE LINK COST DURING DIJKSTRA SIMULATION***************************/
+  /*****************************************************************************************/
+  
+  
+  if ((textfield_dij_cost.getText().length()==0) ||  (textfield_dij_cost_r1.getText().length()==0 || textfield_dij_cost_r2.getText().length() == 0)){
+    println("ERROR: User failed to provide enough inputs");
+  }
+  else if (!network.router_exists(textfield_dij_cost_r1.getText()) || !network.router_exists(textfield_dij_cost_r2.getText())){
+    println("ERROR: User provided router names do not exist");
+  }
+  else if(network.change_link_cost(textfield_dij_cost_r1.getText(), textfield_dij_cost_r2.getText(),Integer.parseInt(textfield_dij_cost.getText()))){// changes link cost
+    println("Changing link cost was successful: ");
+    println("  New cost is: " + textfield_dij_cost.getText());
+  }else{
+    println("ERROR: Link cost change failed");
+  }
+
+
+  
 } //_CODE_:button_change_cost_dij:453746:
-
-public void textfield2_change1(GTextField source, GEvent event) { //_CODE_:textfield2:546056:
-  println("textfield2 - GTextField >> GEvent." + event + " @ " + millis());
-} //_CODE_:textfield2:546056:
-
-public void textfield3_change1(GTextField source, GEvent event) { //_CODE_:textfield3:536020:
-  println("textfield3 - GTextField >> GEvent." + event + " @ " + millis());
-} //_CODE_:textfield3:536020:
 
 public void textfield4_change1(GTextField source, GEvent event) { //_CODE_:dij_choosen_router_textfield:434707:
   println("textfield4 - GTextField >> GEvent." + event + " @ " + millis());
@@ -323,35 +325,34 @@ public void createGUI(){
   dv_sim_button.addEventHandler(this, "dv_sim_button_click");
   address_dv_fwd_tbl = new GLabel(window_distance_vector, 10, 150, 80, 430);
   address_dv_fwd_tbl.setTextAlign(GAlign.LEFT, GAlign.TOP);
-  address_dv_fwd_tbl.setText("My label");
   address_dv_fwd_tbl.setOpaque(true);
   fwd_link_dv_label = new GLabel(window_distance_vector, 100, 150, 80, 430);
   fwd_link_dv_label.setTextAlign(GAlign.LEFT, GAlign.TOP);
-  fwd_link_dv_label.setText("My label");
   fwd_link_dv_label.setOpaque(true);
   label9 = new GLabel(window_distance_vector, 100, 130, 80, 20);
   label9.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label9.setText("Link");
-  label9.setOpaque(false);
+  label9.setOpaque(true);
   label10 = new GLabel(window_distance_vector, 10, 130, 80, 20);
   label10.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label10.setText("Address");
-  label10.setOpaque(false);
+  label10.setOpaque(true);
   label11 = new GLabel(window_distance_vector, 10, 90, 170, 40);
   label11.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label11.setText("Forwarding Table");
   label11.setTextBold();
-  label11.setOpaque(false);
+  label11.setOpaque(true);
   textfield_dv_router_choosen = new GTextField(window_distance_vector, 160, 31, 347, 27, G4P.SCROLLBARS_NONE);
   textfield_dv_router_choosen.setPromptText("Enter the name of another existing router.");
   textfield_dv_router_choosen.setOpaque(true);
   label_dv_counter = new GLabel(window_distance_vector, 42, 61, 80, 18);
   label_dv_counter.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label_dv_counter.setText("step");
+  label_dv_counter.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   label_dv_counter.setOpaque(false);
   label7 = new GLabel(window_distance_vector, 546, 10, 105, 63);
   label7.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  label7.setText("Current Showing Information for Router");
+  label7.setText("Currently Showing Information for Router");
   label7.setLocalColorScheme(GCScheme.RED_SCHEME);
   label7.setOpaque(true);
   label_dv_router_shown = new GLabel(window_distance_vector, 547, 75, 103, 18);
@@ -366,29 +367,41 @@ public void createGUI(){
   button_change_router_dv.addEventHandler(this, "button_click_change_router_dv");
   label_dv_path_information = new GLabel(window_distance_vector, 200, 190, 460, 390);
   label_dv_path_information.setTextAlign(GAlign.LEFT, GAlign.TOP);
-  label_dv_path_information.setText("My label");
   label_dv_path_information.setOpaque(true);
   label8 = new GLabel(window_distance_vector, 200, 170, 460, 20);
   label8.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label8.setText("Path Information");
   label8.setTextBold();
   label8.setOpaque(false);
+  button1 = new GButton(window_distance_vector, 200, 90, 120, 20);
+  button1.setText("Change Link Cost");
+  button1.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+  button1.addEventHandler(this, "button1_click1");
+  textfield_dv_cost = new GTextField(window_distance_vector, 320, 90, 220, 20, G4P.SCROLLBARS_NONE);
+  textfield_dv_cost.setPromptText("Enter a new cost.");
+  textfield_dv_cost.setOpaque(true);
+  textfield_dv_cost_r1 = new GTextField(window_distance_vector, 320, 110, 220, 20, G4P.SCROLLBARS_NONE);
+  textfield_dv_cost_r1.setPromptText("Enter a router on the link.");
+  textfield_dv_cost_r1.setOpaque(true);
+  textfield_dv_cost_r2 = new GTextField(window_distance_vector, 320, 130, 220, 20, G4P.SCROLLBARS_NONE);
+  textfield_dv_cost_r2.setPromptText("Enter the other router on the link.");
+  textfield_dv_cost_r2.setOpaque(true);
   window_dijkstra = GWindow.getWindow(this, "Dijkstra Simulation", 0, 0, 680, 600, JAVA2D);
   window_dijkstra.noLoop();
   window_dijkstra.addDrawHandler(this, "win_draw_dijkstra");
   label1 = new GLabel(window_dijkstra, 20, 90, 80, 20);
   label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label1.setText("Address");
-  label1.setOpaque(false);
+  label1.setOpaque(true);
   label2 = new GLabel(window_dijkstra, 110, 90, 80, 20);
   label2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label2.setText("Link");
-  label2.setOpaque(false);
+  label2.setOpaque(true);
   label3 = new GLabel(window_dijkstra, 20, 50, 170, 40);
   label3.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label3.setText("Forwarding Table");
   label3.setTextBold();
-  label3.setOpaque(false);
+  label3.setOpaque(true);
   address_dijkstra_fwd_tbl = new GLabel(window_dijkstra, 20, 110, 80, 460);
   address_dijkstra_fwd_tbl.setTextAlign(GAlign.LEFT, GAlign.TOP);
   address_dijkstra_fwd_tbl.setOpaque(true);
@@ -408,33 +421,30 @@ public void createGUI(){
   button_dijkstra_simulation.setTextBold();
   button_dijkstra_simulation.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   button_dijkstra_simulation.addEventHandler(this, "button_click_dijkstra_sim");
-  textfield1 = new GTextField(window_dijkstra, 330, 110, 210, 20, G4P.SCROLLBARS_NONE);
-  textfield1.setPromptText("Enter a router on the link.");
-  textfield1.setOpaque(true);
-  textfield1.addEventHandler(this, "textfield1_change1");
+  textfield_dij_cost_r1 = new GTextField(window_dijkstra, 330, 110, 210, 20, G4P.SCROLLBARS_NONE);
+  textfield_dij_cost_r1.setPromptText("Enter a router on the link.");
+  textfield_dij_cost_r1.setOpaque(true);
   button_change_cost_dij = new GButton(window_dijkstra, 210, 90, 110, 20);
   button_change_cost_dij.setText("Change Link Costs");
   button_change_cost_dij.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   button_change_cost_dij.addEventHandler(this, "button_click_cost_dij");
-  textfield2 = new GTextField(window_dijkstra, 330, 130, 210, 20, G4P.SCROLLBARS_NONE);
-  textfield2.setPromptText("Enter the other router on the link.");
-  textfield2.setOpaque(true);
-  textfield2.addEventHandler(this, "textfield2_change1");
-  textfield3 = new GTextField(window_dijkstra, 330, 90, 210, 20, G4P.SCROLLBARS_NONE);
-  textfield3.setPromptText("Enter the new cost.");
-  textfield3.setOpaque(true);
-  textfield3.addEventHandler(this, "textfield3_change1");
+  textfield_dij_cost_r2 = new GTextField(window_dijkstra, 330, 130, 210, 20, G4P.SCROLLBARS_NONE);
+  textfield_dij_cost_r2.setPromptText("Enter the other router on the link.");
+  textfield_dij_cost_r2.setOpaque(true);
+  textfield_dij_cost = new GTextField(window_dijkstra, 330, 90, 210, 20, G4P.SCROLLBARS_NONE);
+  textfield_dij_cost.setPromptText("Enter the new cost.");
+  textfield_dij_cost.setOpaque(true);
   dij_choosen_router_textfield = new GTextField(window_dijkstra, 200, 10, 210, 30, G4P.SCROLLBARS_NONE);
   dij_choosen_router_textfield.setPromptText("Enter a different router to view.");
   dij_choosen_router_textfield.setOpaque(true);
   dij_choosen_router_textfield.addEventHandler(this, "textfield4_change1");
-  label5 = new GLabel(window_dijkstra, 556, 10, 110, 50);
+  label5 = new GLabel(window_dijkstra, 550, 10, 120, 60);
   label5.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label5.setText("Currently Showing Information For Router");
   label5.setTextBold();
   label5.setLocalColorScheme(GCScheme.RED_SCHEME);
   label5.setOpaque(true);
-  label_dij_router_shown = new GLabel(window_dijkstra, 557, 62, 110, 27);
+  label_dij_router_shown = new GLabel(window_dijkstra, 550, 70, 120, 27);
   label_dij_router_shown.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label_dij_router_shown.setText("--");
   label_dij_router_shown.setTextBold();
@@ -474,6 +484,10 @@ GLabel label_dv_router_shown;
 GButton button_change_router_dv; 
 GLabel label_dv_path_information; 
 GLabel label8; 
+GButton button1; 
+GTextField textfield_dv_cost; 
+GTextField textfield_dv_cost_r1; 
+GTextField textfield_dv_cost_r2; 
 GWindow window_dijkstra;
 GLabel label1; 
 GLabel label2; 
@@ -483,10 +497,10 @@ GLabel fwd_link_dij_label;
 GLabel label_dij_path_information; 
 GLabel label6; 
 GButton button_dijkstra_simulation; 
-GTextField textfield1; 
+GTextField textfield_dij_cost_r1; 
 GButton button_change_cost_dij; 
-GTextField textfield2; 
-GTextField textfield3; 
+GTextField textfield_dij_cost_r2; 
+GTextField textfield_dij_cost; 
 GTextField dij_choosen_router_textfield; 
 GLabel label5; 
 GLabel label_dij_router_shown; 

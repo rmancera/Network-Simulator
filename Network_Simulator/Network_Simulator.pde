@@ -23,63 +23,6 @@ public void setup(){
   println("number of links in the network: " + network.get_links_count());
   
   displayGraph();
-  
-    
-  //***********************************************
-  //workspace for Dijkstra prototyping*************
-  //***********************************************
-  //network.get_router(0).Dijkstra_compute(network.get_routers(), network.get_links());
-  //network.get_router(0).dijkstra_compute_forwarding_table();
-
-
-  
-  //***********************************************
-  //workspace for Distance Vector prototyping******
-  //***********************************************
-  
-  /*
-  for(int i=0; i < network.get_routers_count(); i++){
-    network.get_router(i).Distance_Vector_initialize(network.get_routers(), network.get_links());
-  }
-  println("***************************************INITIALIZED**********************************");  
-  for(int i=0; i < network.get_routers_count(); i++){//after all routers initialized print their dv_tables
-    network.get_router(i).Distance_Vector_print_dv_table();
-    network.get_router(i).Distance_Vector_print_forwarding_table(network.links);
-  }
-
-
-  
-
-  for(int i=0; i < network.get_routers_count(); i++){
-    network.get_router(i).Distance_Vector_update_neighbors(network.get_routers());
-  }
-  for(int i=0; i < network.get_routers_count(); i++){
-    network.get_router(i).Distance_Vector_update_self(network.get_routers(), network.get_links());
-  }
-  println("***************************************FIRST UPDATE**********************************");
-  for(int i=0; i < network.get_routers_count(); i++){//after all routers first update print their dv_tables
-    network.get_router(i). Distance_Vector_print_dv_table();
-    network.get_router(i).Distance_Vector_print_forwarding_table(network.links);
-  }  
-  
-  
-  
-  for(int i=0; i < network.get_routers_count(); i++){
-    network.get_router(i).Distance_Vector_update_neighbors(network.get_routers());
-  }
-  for(int i=0; i < network.get_routers_count(); i++){
-    network.get_router(i).Distance_Vector_update_self(network.get_routers(), network.get_links());
-  }
-  println("***************************************SECOND UPDATE**********************************");
-  for(int i=0; i < network.get_routers_count(); i++){//after all routers first update print their dv_tables
-    network.get_router(i).Distance_Vector_print_dv_table();
-    network.get_router(i).Distance_Vector_print_forwarding_table(network.links);
-  }    
-  
-  */
-  
-
-  
 }
 
 public void draw(){

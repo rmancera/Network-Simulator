@@ -130,6 +130,15 @@ public class Network{
     
     return true;
   }
+  public final boolean change_link_cost(String router1_name, String router2_name, int new_cost){
+    for(int i = 0; i < links.size(); i++){
+      if(links.get(i).has_router_name(router1_name) && links.get(i).has_router_name(router2_name)){
+        links.get(i).set_link_cost(new_cost);
+        return true;
+      }
+    }
+    return false;
+  }
   public final int router_links_count(String router_name){//# of links corresponding to router specified
     int count = 0;
     for(int i = 0; i < links.size(); i++){
