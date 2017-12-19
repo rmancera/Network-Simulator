@@ -72,7 +72,7 @@ public void setup(){
   }
   println("***************************************SECOND UPDATE**********************************");
   for(int i=0; i < network.get_routers_count(); i++){//after all routers first update print their dv_tables
-    network.get_router(i). Distance_Vector_print_dv_table();
+    network.get_router(i).Distance_Vector_print_dv_table();
     network.get_router(i).Distance_Vector_print_forwarding_table(network.links);
   }    
   
@@ -113,9 +113,9 @@ public void displayGraph()
 }
 
 public void update_distance_vector_display(){
-     label_dv_router_shown.setText(choosen_dv_router);
+    label_dv_router_shown.setText(choosen_dv_router);
     
-    
+    //DISPLAY FORWARDING TABLE
     HashMap<String,String> fwd_tbl = network.get_router(network.get_router_index(choosen_dv_router)).Distance_Vector_get_forwarding_table(network.get_links());
     
     String addresses = new String();
@@ -133,5 +133,12 @@ public void update_distance_vector_display(){
     }
     
     fwd_link_dv_label.setText(forward_ports);
-    address_dv_fwd_tbl.setText(addresses); 
+    address_dv_fwd_tbl.setText(addresses);
+    
+    
+    //DISPLAY DISTANCE VECTOR TABLE
+    String dv_path_info = new String();
+    dv_path_info = "Distance Vector Table: \n\r";
+    dv_path_info += network.get_router(network.get_router_index(choosen_dv_router)).Distance_Vector_get_dv_table();
+    label_dv_path_information.setText(dv_path_info);
 }

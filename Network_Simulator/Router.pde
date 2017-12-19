@@ -172,6 +172,22 @@ public class Router {
   
   
   
+  public String Distance_Vector_get_dv_table(){      
+      String dv_table_string = new String();
+      Iterator it = dv_table.entrySet().iterator();
+      while (it.hasNext()){
+        Map.Entry<String,HashMap<String,String>> pair = (Map.Entry)it.next();
+        
+        dv_table_string += pair.getKey() + ":  " + dv_table.get(pair.getKey()).toString();
+        dv_table_string += "\n\r";
+      }
+      
+      return dv_table_string;
+    
+  }
+  
+  
+  
   
   
   private HashMap<String,String> dv_forwarding_table; //<destination,next hop>
@@ -233,7 +249,7 @@ public class Router {
   
   /*****************************************************************************************************************
   ******************************************************************************************************************
-  *                                     Dijstra's Algorithm                                                        *
+  *                                           Dijstra's                                                            *
   ******************************************************************************************************************
   ******************************************************************************************************************/
   
