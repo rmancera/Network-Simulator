@@ -167,9 +167,28 @@ public void button_click_change_router_dv(GButton source, GEvent event) { //_COD
     
 } //_CODE_:button_change_router_dv:819476:
 
-public void button1_click1(GButton source, GEvent event) { //_CODE_:button1:258793:
+public void button_click_cost_dv(GButton source, GEvent event) { //_CODE_:button_cost_dv:258793:
   println("button1 - GButton >> GEvent." + event + " @ " + millis());
-} //_CODE_:button1:258793:
+  /*****************************************************************************************/
+  /*******************CHANGE LINK COST DURING DIST. VECT. SIMULATION************************/
+  /*****************************************************************************************/
+
+
+  if ((textfield_dij_cost.getText().length()==0) ||  (textfield_dij_cost_r1.getText().length()==0 || textfield_dij_cost_r2.getText().length() == 0)){
+    println("ERROR: User failed to provide enough inputs");
+  }
+  else if (!network.router_exists(textfield_dij_cost_r1.getText()) || !network.router_exists(textfield_dij_cost_r2.getText())){
+    println("ERROR: User provided router names do not exist");
+  }
+  else if(network.change_link_cost(textfield_dij_cost_r1.getText(), textfield_dij_cost_r2.getText(),Integer.parseInt(textfield_dij_cost.getText()))){// changes link cost
+    println("Changing link cost was successful: ");
+    println("  New cost is: " + textfield_dij_cost.getText());
+  }else{
+    println("ERROR: Link cost change failed");
+  }
+
+  
+} //_CODE_:button_cost_dv:258793:
 
 synchronized public void win_draw_dijkstra(PApplet appc, GWinData data) { //_CODE_:window_dijkstra:895846:
   appc.background(230);
@@ -373,10 +392,10 @@ public void createGUI(){
   label8.setText("Path Information");
   label8.setTextBold();
   label8.setOpaque(false);
-  button1 = new GButton(window_distance_vector, 200, 90, 120, 20);
-  button1.setText("Change Link Cost");
-  button1.setLocalColorScheme(GCScheme.GREEN_SCHEME);
-  button1.addEventHandler(this, "button1_click1");
+  button_cost_dv = new GButton(window_distance_vector, 200, 90, 120, 20);
+  button_cost_dv.setText("Change Link Cost");
+  button_cost_dv.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+  button_cost_dv.addEventHandler(this, "button_click_cost_dv");
   textfield_dv_cost = new GTextField(window_distance_vector, 320, 90, 220, 20, G4P.SCROLLBARS_NONE);
   textfield_dv_cost.setPromptText("Enter a new cost.");
   textfield_dv_cost.setOpaque(true);
@@ -484,7 +503,7 @@ GLabel label_dv_router_shown;
 GButton button_change_router_dv; 
 GLabel label_dv_path_information; 
 GLabel label8; 
-GButton button1; 
+GButton button_cost_dv; 
 GTextField textfield_dv_cost; 
 GTextField textfield_dv_cost_r1; 
 GTextField textfield_dv_cost_r2; 
