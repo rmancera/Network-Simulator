@@ -5,14 +5,15 @@ import g4p_controls.*;
 Network network = new Network(0);
 //creates new jframe for a visible graph window
 GraphDisplay g = null;
-GraphDisplay dg = null;
+int dv_counter = 0;
+String choosen_dv_router = null;
 
 public void setup(){
   size(480, 320, JAVA2D);
   createGUI();
   customGUI();
   // Place your setup code here
-  window_distance_vector.setVisible(false);
+  window_distance_vector.setVisible(true);
   window_dijkstra.setVisible(true);
   
   
@@ -105,8 +106,32 @@ public void displayGraph()
   
   for(int i=0; i < network.get_links_count(); i++){
     DefaultWeightedEdge e = g.addEdge(network.get_link_routers_names(i)[0],network.get_link_routers_names(i)[1]);
-    g.setEdgeWeights(e,network.get_links().get(i).get_link_cost());
+    g.setEdgeWeight(e,network.get_links().get(i).get_link_cost());
     
   }
   g.display(); 
+}
+
+public void update_distance_vector_display(){
+     label_dv_router_shown.setText(choosen_dv_router);
+    
+    
+    HashMap<String,String> fwd_tbl = network.get_router(network.get_router_index(choosen_dv_router)).Distance_Vector_get_forwarding_table(network.get_links());
+    
+    String addresses = new String();
+    String forward_ports = new String();
+    
+    Iterator it = fwd_tbl.entrySet().iterator();
+    while (it.hasNext()){
+  
+      Map.Entry<String,String> pair = (Map.Entry)it.next(); 
+      if(!pair.getKey().equals(choosen_dv_router)){
+        addresses += pair.getKey() + "\r\n";
+        forward_ports += pair.getValue() + "\r\n";
+        println("getKey : " + pair.getKey() + "getValue: " + pair.getValue());
+      }
+    }
+    
+    fwd_link_dv_label.setText(forward_ports);
+    address_dv_fwd_tbl.setText(addresses); 
 }

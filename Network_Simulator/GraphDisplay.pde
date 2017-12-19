@@ -59,7 +59,8 @@ public class GraphDisplay extends JFrame {
     //println("[Graph][removeVertex] removing: " + vertex);
     //println(graph.toString());
   }
-  public void setEdgeWeights(DefaultWeightedEdge e, int weight){
+  public void setEdgeWeight(DefaultWeightedEdge e, int weight){
     graph.setEdgeWeight(e, weight);
   }
+  
 }

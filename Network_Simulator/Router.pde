@@ -2,7 +2,9 @@
 ** To Do:
 ** [] remove mode variable from class and constructor (it was not necessary in the final impementation)
 ** [] if time allows clean up Distance_Vector_initialize(ArrayList<Router> routers, ArrayList<Link> links)
-** --see  Distance_Vector_update_self(...) which uses new methods in Link class that should clean up the code 
+** ---see  Distance_Vector_update_self(...) which uses new methods in Link class that should clean up the code
+** [] Distance Vector forwarding table returned is defectively including own router in a row
+** ---work around performed GUI side, try to correct return here if there is time
 */
 
 
@@ -38,9 +40,7 @@ public class Router {
     return mode;
   }
   
-  private class Dijstra_Forwarding_table{
-    
-  }
+
   
   
   
@@ -174,16 +174,16 @@ public class Router {
   
   
   
-  private HashMap<String,String> forwarding_table; //<destination,next hop>
+  private HashMap<String,String> dv_forwarding_table; //<destination,next hop>
  
-  public String Distance_Vector_get_forwarding_table(ArrayList<Link> links){
+  public HashMap<String,String> Distance_Vector_get_forwarding_table(ArrayList<Link> links){
     HashMap<String,Integer> neighbors = new HashMap<String,Integer>();//<neighbor name, direct cost to neighbor>
-    forwarding_table = new HashMap<String,String>();//<destinationY, next hop>
+    dv_forwarding_table = new HashMap<String,String>();//<destinationY, next hop>
     
     //initialize forwarding table and neghbor cost map
     for(int i = 0; i < links.size(); i++){
       if(links.get(i).has_router_name(router_name)){
-        forwarding_table.put(links.get(i).get_neighboring_router_name(router_name),links.get(i).get_neighboring_router_name(router_name));
+        dv_forwarding_table.put(links.get(i).get_neighboring_router_name(router_name),links.get(i).get_neighboring_router_name(router_name));
         neighbors.put(links.get(i).get_neighboring_router_name(router_name), links.get(i).get_link_cost());  
       }
     }
@@ -220,13 +220,13 @@ public class Router {
       }//end of while loop
       
       if(min_neighbor != null){
-          forwarding_table.put(pair_col.getKey(),min_neighbor);
-          println("[Router][Distance_Vector_print_forwarding_table] forwarding_table: " + forwarding_table.toString());
+          dv_forwarding_table.put(pair_col.getKey(),min_neighbor);
+          println("[Router][Distance_Vector_print_forwarding_table] forwarding_table: " + dv_forwarding_table.toString());
       }
   }
-      println("[Router][Distance_Vector_print_forwarding_table] forwarding_table: " + forwarding_table.toString());
+      println("[Router][Distance_Vector_print_forwarding_table] forwarding_table: " + dv_forwarding_table.toString());
       
-      return forwarding_table.toString();
+      return dv_forwarding_table;
   }
   
   
