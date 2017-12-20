@@ -4,8 +4,11 @@ Created by: Roberto Mancera Jr.
 https://github.com/rmancera/Network-Simulator
 
 This project is a graphical user interface that simulates routing network topologies.
-  (1)Initially the user is presented with two windows (one where the network topology is displayed and another where the user can make changes to the network topology by filling in text boxes and pressing corresponding buttons).
-  (2)Once the user has defined a desired topology, the user can select a routing algorithm (Dijkstra or Distance Vector) from teh drop down menu in one of the windows
+  (1)Initially a user is presented with two windows (one where the network topology is displayed and another where the user can make changes to the network topology by filling in text boxes and pressing corresponding buttons).
+  (2)Once the user has defined a desired topology, the user must select a routing algorithm (Dijkstra or Distance Vector) from the drop down menu titled "CHOOSE SIMULATION" in order to simulate the network.
+  (3)After the user has choosen a routing algorithm a third window will appear that provides the user with the current link costs of the topology.  The user may change the link cost of any link at any time within this window.
+  (4)The user must provide a router to view prior to running the chosen simulation (the user may select a different router to view at any time during the simulation).
+  (5)Once the user provides the router and starts the simulation a forwarding table is populated and network path information is provided for the specified router. 
 
 This project contains functioning executables available for download for both Windows (.exe files) and Linux. 
 The locations of these executables is:
