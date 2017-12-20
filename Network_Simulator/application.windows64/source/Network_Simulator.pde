@@ -14,7 +14,7 @@ public void setup(){
   customGUI();
   // Place your setup code here
   window_distance_vector.setVisible(false);
-  window_dijkstra.setVisible(true);
+  window_dijkstra.setVisible(false);
   
   
   println("routers in the network: " + network.get_routers_list());
