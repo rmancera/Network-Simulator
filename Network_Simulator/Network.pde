@@ -186,12 +186,12 @@ public class Network{
   public final int get_links_count(){//number of routers in the network
     return links.size();
   }
-  public final String get_links_list(){
-    String links_list = "";
+  public final String get_links_list(){//string listing the cost for each link
+    String links_list = "Current costs of each link in the network are as follows:\n\r";
     for (int i = 0; i < links.size(); i++){
-       links_list += "[" + links.get(i).get_router_a_name() + "<-->" + 
-                     links.get(i).get_router_b_name() + ", costs " + 
-                     Integer.toString(links.get(i).get_link_cost()) + "]; ";
+       links_list += "    Link(" + links.get(i).get_router_a_name() + "," + 
+                     links.get(i).get_router_b_name() + ") has a cost of " + 
+                     Integer.toString(links.get(i).get_link_cost()) + "\n\r";
     }
 
     return links_list;
