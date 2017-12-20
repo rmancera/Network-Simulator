@@ -32,6 +32,8 @@ The locations of these executables is:
  - Network_Simulator\application.linux64\
  - Network_Simulator\application.windows32\
  - Network_Simulator\application.windows64\
+ 
+If you download this repo as a zipped folder, make sure to extract the folder (uncompress) prior to attempting to run any executable.  Java 8 runtime environment or later may be necessary depending on the executable chosen. 
 
 This project is developed using both the programming languages Processing and Java.
 This project is originally set up for the Processing 3.3.6 integrated development environment (IDE).
